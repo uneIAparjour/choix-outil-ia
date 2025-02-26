@@ -1,69 +1,39 @@
-# Welcome to your Lovable project
 
-## Project info
+# Outil d'aide au choix d'une IA générative
 
-**URL**: https://lovable.dev/projects/5fe08975-52cc-4253-9463-cc465ffece04
+## Présentation
 
-## How can I edit this code?
+Cette application web a été conçue pour aider les utilisateurs à évaluer méthodiquement les outils d'IA générative selon un arbre de décision structuré. Elle permet de suivre un processus pas à pas sous forme de briques interactives, qui se replient progressivement pour montrer le chemin parcouru.
 
-There are several ways of editing your application.
+L'interface utilise un design minimaliste et efficace, conforme aux principes du flat design, pour une expérience utilisateur intuitive et claire.
 
-**Use Lovable**
+## Fonctionnalités
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5fe08975-52cc-4253-9463-cc465ffece04) and start prompting.
+- **Navigation intuitive** : Interface simple avec des questions et des choix clairs
+- **Arbre de décision complet** : Évaluation méthodique des outils d'IA selon plusieurs critères
+- **Infobulles informatives** : Informations complémentaires pour aider à la décision
+- **Design réactif** : Adapté aux ordinateurs et appareils mobiles
+- **Animation de confetti** : Célébration visuelle lorsqu'un outil approprié est trouvé
 
-Changes made via Lovable will be committed automatically to this repo.
+## Données
 
-**Use your preferred IDE**
+L'application intègre un arbre de décision complet pour guider les utilisateurs à travers le processus d'évaluation des outils d'IA générative, en tenant compte de critères comme :
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Conformité au RGPD et à l'AI Act
+- Accessibilité et modèle économique
+- Impact environnemental
+- Éthique et conditions de travail
+- Valeur ajoutée et facilité d'utilisation
+- Adéquation avec les valeurs professionnelles
+- Pertinence pour un usage pédagogique
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## URL du projet
 
-Follow these steps:
+**URL** : https://lovable.dev/projects/5fe08975-52cc-4253-9463-cc465ffece04
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Technologies utilisées
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
 - React
-- shadcn-ui
+- TypeScript
 - Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/5fe08975-52cc-4253-9463-cc465ffece04) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Lucide Icons
