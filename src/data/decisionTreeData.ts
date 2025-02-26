@@ -177,7 +177,7 @@ export const decisionTreeData = [
     id: "14",
     question: "L'application permet-elle d'atteindre les objectifs pédagogiques définis par les programmes scolaires français ?",
     choices: [
-      { text: "Oui", nextStep: "16" },
+      { text: "Oui", nextStep: "15" },
       { text: "Non", nextStep: "18" },
       { text: "Je ne sais pas", nextStep: "14.1" }
     ]
