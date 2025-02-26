@@ -1,7 +1,6 @@
-
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronDown, ChevronUp, Info, Trophy, Search, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw } from "lucide-react";
 import { decisionTreeData } from "@/data/decisionTreeData";
 
 interface Step {
@@ -83,7 +82,7 @@ const DecisionTree: React.FC = () => {
     }
 
     // If the user chose to restart at step 1, clear everything and start fresh
-    if (nextStep === "1" && currentPath.includes("17") || currentPath.includes("19")) {
+    if (nextStep === "1" && (currentPath.includes("17") || currentPath.includes("19"))) {
       resetTree();
       return;
     }
@@ -123,18 +122,6 @@ const DecisionTree: React.FC = () => {
         targetStep.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }, 100);
-  };
-
-  const toggleExpand = (stepId: string) => {
-    const newExpandedSteps = new Set(expandedSteps);
-    
-    if (newExpandedSteps.has(stepId)) {
-      newExpandedSteps.delete(stepId);
-    } else {
-      newExpandedSteps.add(stepId);
-    }
-    
-    setExpandedSteps(newExpandedSteps);
   };
 
   const scrollToLatestStep = () => {
@@ -180,15 +167,18 @@ const DecisionTree: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto py-8 px-4" ref={treeRef}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-flatdark">
-          Aide au choix d'une application utilisant l'IA générative
-        </h1>
-        <button
-          onClick={resetTree}
-          className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-md bg-flatdark text-flatwhite hover:bg-opacity-90 transition-all"
-        >
-          <X size={18} /> Réinitialiser
-        </button>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1A1F2C]">
+            Aide au choix d'une application utilisant l'IA générative
+          </h1>
+          <div 
+            onClick={resetTree}
+            className="cursor-pointer p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+            title="Réinitialiser le parcours"
+          >
+            <RotateCcw size={18} className="text-gray-500 hover:text-gray-700" />
+          </div>
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -215,11 +205,11 @@ const DecisionTree: React.FC = () => {
               }}
             >
               <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-[#1A1F2C]">
                   {isConclusion ? (
                     <span className="flex items-center gap-2">
-                      {stepId === "17" && <Trophy className="text-flatsuccess" size={24} />}
-                      {stepId === "19" && <Search className="text-flatdark" size={24} />}
+                      {stepId === "17" && <Trophy className="text-[#4ADE80]" size={20} />}
+                      {stepId === "19" && <Search className="text-[#1A1F2C]" size={20} />}
                       Conclusion
                     </span>
                   ) : (
@@ -227,24 +217,24 @@ const DecisionTree: React.FC = () => {
                   )}
                 </h3>
                 {!isLastStep && (
-                  <button className="text-flatprimary">
-                    {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  <button className="text-primary">
+                    {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </button>
                 )}
               </div>
               
               {(isExpanded || isLastStep) && (
                 <div className="mt-4 animate-fade-in">
-                  <p className="text-flatdark mb-4 font-medium">{step.question}</p>
-                  
-                  {step.infoTooltip && (
-                    <div className="info-bubble">
-                      <div className="flex items-start gap-2">
-                        <Info size={20} className="text-flatsecondary mt-1 flex-shrink-0" />
-                        <div dangerouslySetInnerHTML={{ __html: step.infoTooltip.replace(/\n/g, '<br>') }} />
+                  <div className="flex items-start gap-2">
+                    <p className="text-[#1A1F2C] mb-4 font-medium flex-grow">{step.question}</p>
+                    
+                    {step.infoTooltip && (
+                      <div className="tooltip-container flex-shrink-0 mt-1">
+                        <Info size={18} className="info-icon" />
+                        <div className="tooltip" dangerouslySetInnerHTML={{ __html: step.infoTooltip.replace(/\n/g, '<br>') }} />
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   
                   {isLastStep && !step.isAction && (
                     <div className="flex flex-col gap-2 mt-4">
@@ -261,8 +251,8 @@ const DecisionTree: React.FC = () => {
                   )}
                   
                   {isLastStep && step.isAction && (
-                    <div className="mt-4 px-4 py-3 bg-flatlight rounded-md">
-                      <p className="text-flatdark font-medium">{step.question}</p>
+                    <div className="mt-4 px-4 py-3 bg-[#F1F5F9] rounded-md">
+                      <p className="text-[#1A1F2C] font-medium">{step.question}</p>
                       <div className="flex flex-col gap-2 mt-4">
                         {step.choices.map((choice, idx) => (
                           <button

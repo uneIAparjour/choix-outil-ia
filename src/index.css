@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 240 25% 98%;
+    --background: 0 0% 98%;
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 252 79% 75%;
+    --primary: 252 79% 65%;
     --primary-foreground: 240 5.9% 10%;
 
     --secondary: 196 76% 49%;
@@ -54,30 +54,31 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', sans-serif;
+    letter-spacing: -0.015em;
   }
 
   /* Custom classes for our decision tree app */
   .decision-brick {
-    @apply relative bg-flatwhite rounded-lg border border-flatlight p-6 mb-4 shadow-sm transition-all duration-300 ease-in-out;
+    @apply relative bg-white rounded-lg border border-[#E5E7EB] p-6 mb-4 shadow-sm transition-all duration-300 ease-in-out;
   }
 
   .decision-brick.active {
-    @apply border-l-4 border-l-flatprimary;
+    @apply border-l-4 border-l-primary;
   }
 
   .decision-brick.collapsed {
-    @apply bg-flatgray cursor-pointer hover:bg-flatlight hover:border-flatprimary transition-all;
-    max-height: 60px;
+    @apply bg-[#F9FAFB] cursor-pointer hover:bg-[#F1F5F9] hover:border-primary/30 transition-all;
+    max-height: 56px;
     overflow: hidden;
   }
 
   .decision-brick.collapsed::after {
-    content: "Cliquez pour revenir à cette étape";
+    content: "Revenir à cette étape";
     position: absolute;
     right: 10px;
-    bottom: 5px;
+    bottom: 4px;
     font-size: 0.7rem;
-    color: #9b87f5;
+    color: hsl(var(--primary));
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -87,20 +88,47 @@
   }
 
   .decision-brick.success {
-    @apply bg-flatgreen border-flatsuccess;
+    @apply bg-[#F0FDF4] border-[#4ADE80];
   }
 
   .choice-button {
-    @apply px-4 py-2 my-1 rounded-md transition-all duration-200 bg-flatlight text-flatdark hover:bg-flatprimary hover:text-flatwhite;
-  }
-
-  .info-bubble {
-    @apply bg-flatgray text-flatdark p-4 rounded-lg my-3 border-l-4 border-flatsecondary;
+    @apply px-4 py-2 my-1 rounded-md transition-all duration-200 bg-[#F1F5F9] text-[#1A1F2C] hover:bg-primary hover:text-white;
   }
   
   .confetti {
     @apply absolute w-4 h-4 rounded-full animate-confetti;
-    background: linear-gradient(135deg, #9b87f5, #1EAEDB, #F2FCE2);
+    background: linear-gradient(135deg, hsl(var(--primary)), #1EAEDB, #F0FDF4);
+  }
+
+  .info-icon {
+    @apply text-secondary cursor-help transition-all duration-150 hover:text-secondary/80;
+  }
+
+  .tooltip {
+    @apply invisible absolute bg-[#1A1F2C] text-white text-xs py-2 px-3 rounded opacity-0 transition-opacity duration-200 z-50 max-w-xs;
+    width: 250px;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .tooltip-container {
+    @apply relative inline-block;
+  }
+
+  .tooltip-container:hover .tooltip {
+    @apply visible opacity-100;
+  }
+
+  .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1A1F2C transparent transparent transparent;
   }
 }
 
@@ -111,7 +139,7 @@ html {
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid #9b87f5;
+  border: 5px solid hsl(var(--primary));
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
