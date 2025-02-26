@@ -66,9 +66,24 @@
   }
 
   .decision-brick.collapsed {
-    @apply bg-flatgray cursor-pointer;
+    @apply bg-flatgray cursor-pointer hover:bg-flatlight hover:border-flatprimary transition-all;
     max-height: 60px;
     overflow: hidden;
+  }
+
+  .decision-brick.collapsed::after {
+    content: "Cliquez pour revenir à cette étape";
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    font-size: 0.7rem;
+    color: #9b87f5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .decision-brick.collapsed:hover::after {
+    opacity: 1;
   }
 
   .decision-brick.success {

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, X } from "lucide-react";
@@ -81,6 +82,12 @@ const DecisionTree: React.FC = () => {
       return;
     }
 
+    // If the user chose to restart at step 1, clear everything and start fresh
+    if (nextStep === "1" && currentPath.includes("17") || currentPath.includes("19")) {
+      resetTree();
+      return;
+    }
+
     // For standard transitions
     setCurrentPath([...currentPath, nextStep]);
     
@@ -91,6 +98,31 @@ const DecisionTree: React.FC = () => {
     
     // Scroll to the new step
     setTimeout(() => scrollToLatestStep(), 100);
+  };
+
+  // Handle click on a previous step to jump to it
+  const jumpToStep = (index: number) => {
+    if (index >= currentPath.length - 1) return; // Don't do anything if clicking on the current step
+    
+    // Get the step ID we want to jump to
+    const targetStepId = currentPath[index];
+    
+    // Update the current path to truncate at the target step
+    const newPath = currentPath.slice(0, index + 1);
+    setCurrentPath(newPath);
+    
+    // Only expand the target step
+    const newExpandedSteps = new Set<string>();
+    newExpandedSteps.add(targetStepId);
+    setExpandedSteps(newExpandedSteps);
+    
+    // Scroll to the step
+    setTimeout(() => {
+      const targetStep = document.getElementById(`step-${targetStepId}`);
+      if (targetStep) {
+        targetStep.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 100);
   };
 
   const toggleExpand = (stepId: string) => {
@@ -147,13 +179,13 @@ const DecisionTree: React.FC = () => {
   // Render the sequential steps
   return (
     <div className="max-w-3xl mx-auto py-8 px-4" ref={treeRef}>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-flatdark">
-          Outil d'aide au choix d'une IA générative
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-flatdark">
+          Aide au choix d'une application utilisant l'IA générative
         </h1>
         <button
           onClick={resetTree}
-          className="flex items-center gap-2 px-4 py-2 rounded-md bg-flatdark text-flatwhite hover:bg-opacity-90 transition-all"
+          className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-md bg-flatdark text-flatwhite hover:bg-opacity-90 transition-all"
         >
           <X size={18} /> Réinitialiser
         </button>
@@ -177,7 +209,8 @@ const DecisionTree: React.FC = () => {
               }`}
               onClick={() => {
                 if (!isLastStep) {
-                  toggleExpand(stepId);
+                  // If clicking on a previous step, jump to it
+                  jumpToStep(index);
                 }
               }}
             >
