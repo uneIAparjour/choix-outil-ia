@@ -1,4 +1,3 @@
-
 // Data structure for our decision tree
 export const decisionTreeData = [
   {
@@ -41,6 +40,7 @@ export const decisionTreeData = [
       { text: "Je ne sais toujours pas", nextStep: "18" },
       { text: "J'ai suivi cette étape", nextStep: "Retour à Étape 3" }
     ],
+    infoTooltip: "Les 6 critères principaux RGPD : \n- Collecte des données seulement nécessaires \n- Transparence sur la collecte et l'utilisation des données \n- Facilité pour exercer son droit de consultation, rectification, suppression des données \n- Durée de conservation des données \n- Sécurisation des données \n- Démarche continue de vérification de la conformité RGPD",
     isAction: true
   },
   {

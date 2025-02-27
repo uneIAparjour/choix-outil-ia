@@ -3,6 +3,11 @@ import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw } from "lucide-react";
 import { decisionTreeData } from "@/data/decisionTreeData";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface Step {
   id: string;
@@ -185,17 +190,33 @@ const DecisionTree: React.FC = () => {
             >
               <div className="p-6">
                 <div className="flex justify-between items-start gap-4">
-                  <h3 className="font-semibold text-[#2D3648] text-lg">
-                    {isConclusion ? (
-                      <span className="flex items-center gap-2">
-                        {stepId === "17" && <Trophy className="text-[#4ADE80]" size={24} />}
-                        {stepId === "19" && <Search className="text-[#2D3648]" size={24} />}
-                        {step.question}
-                      </span>
-                    ) : (
-                      <>{step.question}</>
+                  <div className="flex items-start gap-2">
+                    <h3 className="font-semibold text-[#2D3648] text-lg">
+                      {isConclusion ? (
+                        <span className="flex items-center gap-2">
+                          {stepId === "17" && <Trophy className="text-[#4ADE80]" size={24} />}
+                          {stepId === "19" && <Search className="text-[#2D3648]" size={24} />}
+                          {step.question}
+                        </span>
+                      ) : (
+                        <>{step.question}</>
+                      )}
+                    </h3>
+                    {step.infoTooltip && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button className="mt-1 p-1 rounded-full hover:bg-[#EEF1FF] text-[#6172F3] transition-colors">
+                            <Info size={16} />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-sm p-4 text-sm leading-relaxed" side="right">
+                          <div dangerouslySetInnerHTML={{ 
+                            __html: step.infoTooltip.replace(/\n/g, '<br>') 
+                          }} />
+                        </TooltipContent>
+                      </Tooltip>
                     )}
-                  </h3>
+                  </div>
                   {!isLastStep && (
                     <button className="text-[#6172F3] p-1 hover:bg-[#EEF1FF] rounded-full transition-colors">
                       {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -205,18 +226,6 @@ const DecisionTree: React.FC = () => {
                 
                 {(isExpanded || isLastStep) && (
                   <div className="mt-6 animate-fade-in">
-                    {step.infoTooltip && (
-                      <div className="mb-6 p-4 bg-[#EEF1FF] rounded-lg flex items-start gap-3">
-                        <Info size={20} className="text-[#6172F3] flex-shrink-0 mt-1" />
-                        <div 
-                          className="text-[#2D3648] text-sm leading-relaxed"
-                          dangerouslySetInnerHTML={{ 
-                            __html: step.infoTooltip.replace(/\n/g, '<br>') 
-                          }} 
-                        />
-                      </div>
-                    )}
-                    
                     {isLastStep && (
                       <div className="flex flex-col gap-3 mt-4">
                         {step.choices.map((choice, idx) => (
