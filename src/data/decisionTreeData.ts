@@ -39,7 +39,7 @@ export const decisionTreeData = [
     question: "Je consulte les 6 critères principaux du RGPD",
     choices: [
       { text: "Je ne sais toujours pas", nextStep: "18" },
-      { text: "Une fois consulté", nextStep: "Retour à Étape 3" }
+      { text: "J'ai suivi cette étape", nextStep: "Retour à Étape 3" }
     ],
     isAction: true
   },
@@ -93,7 +93,7 @@ export const decisionTreeData = [
     id: "7.1",
     question: "Évaluer l'impact environnemental en examinant les pratiques de l'entreprise en matière de durabilité. Envisagez des alternatives si l'impact est significatif.",
     choices: [
-      { text: "Une fois évalué", nextStep: "Retour à Étape 7" }
+      { text: "J'ai suivi cette étape", nextStep: "Retour à Étape 7" }
     ],
     isAction: true
   },
@@ -128,7 +128,7 @@ export const decisionTreeData = [
     id: "9.1",
     question: "Évaluez les fonctionnalités de l'application et leur impact potentiel sur la tâche à accomplir.",
     choices: [
-      { text: "Une fois évalué", nextStep: "Retour à Étape 9" }
+      { text: "J'ai suivi cette étape", nextStep: "Retour à Étape 9" }
     ],
     isAction: true
   },
@@ -186,7 +186,7 @@ export const decisionTreeData = [
     id: "14.1",
     question: "Consultez les programmes scolaires et évaluez comment l'application peut s'y référer.",
     choices: [
-      { text: "Une fois consulté", nextStep: "Retour à Étape 14" }
+      { text: "J'ai suivi cette étape", nextStep: "Retour à Étape 14" }
     ],
     isAction: true
   },
@@ -221,7 +221,7 @@ export const decisionTreeData = [
     id: "15.2",
     question: "Recherchez des études de cas ou des témoignages d'enseignants ayant utilisé l'application",
     choices: [
-      { text: "Une fois recherché", nextStep: "Retour à Étape 15" }
+      { text: "J'ai suivi cette étape", nextStep: "Retour à Étape 15" }
     ],
     isAction: true
   },
