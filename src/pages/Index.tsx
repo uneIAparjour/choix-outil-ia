@@ -4,7 +4,7 @@ import DecisionTree from "@/components/DecisionTree";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-flatgray to-flatwhite">
+    <div className="min-h-screen bg-gradient-to-br from-[#F4F6FF] to-white">
       <DecisionTree />
     </div>
   );

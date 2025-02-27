@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw } from "lucide-react";
@@ -141,20 +142,19 @@ const DecisionTree: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 min-h-screen bg-gradient-to-br from-[#F4F6FF] to-white font-plus-jakarta" ref={treeRef}>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#2D3648] leading-tight">
-            Aide au choix d'une application utilisant l'IA générative
-          </h1>
-          <button
-            onClick={resetTree}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EEF1FF] hover:bg-[#E2E7FF] text-[#6172F3] transition-colors"
-            title="Réinitialiser le parcours"
-          >
-            <RotateCcw size={18} />
-            <span className="text-sm font-medium">Recommencer</span>
-          </button>
-        </div>
+      <div className="flex flex-col items-center justify-center mb-16 text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6172F3] to-[#4361EE] leading-tight drop-shadow-sm mb-6">
+          Aide au choix d'une application<br/>utilisant l'IA générative
+        </h1>
+        <div className="w-20 h-1 bg-gradient-to-r from-[#6172F3] to-[#4361EE] rounded-full mb-6"></div>
+        <button
+          onClick={resetTree}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#EEF1FF] hover:bg-[#E2E7FF] text-[#6172F3] transition-colors shadow-sm"
+          title="Réinitialiser le parcours"
+        >
+          <RotateCcw size={18} />
+          <span className="text-sm font-medium">Recommencer</span>
+        </button>
       </div>
 
       <div className="space-y-6">
@@ -237,6 +237,12 @@ const DecisionTree: React.FC = () => {
           );
         })}
       </div>
+
+      <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center text-sm text-[#6B7280]">
+        <p>
+          WIP par <a href="mailto:uneIAparjour@gmail.com" className="text-[#6172F3] hover:underline">BF</a> / RC
+        </p>
+      </footer>
     </div>
   );
 };
