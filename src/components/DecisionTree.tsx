@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw } from "lucide-react";
@@ -252,8 +253,7 @@ const DecisionTree: React.FC = () => {
                   
                   {isLastStep && step.isAction && (
                     <div className="mt-4 px-4 py-3 bg-[#F1F5F9] rounded-md">
-                      <p className="text-[#1A1F2C] font-medium">{step.question}</p>
-                      <div className="flex flex-col gap-2 mt-4">
+                      <div className="flex flex-col gap-2">
                         {step.choices.map((choice, idx) => (
                           <button
                             key={idx}
