@@ -92,7 +92,7 @@
   }
 
   .choice-button {
-    @apply px-4 py-2 my-1 rounded-md transition-all duration-200 bg-[#F1F5F9] text-[#1A1F2C] hover:bg-[#005E6E] hover:text-white;
+    @apply px-4 py-2 my-1 rounded-md transition-all duration-200 bg-[#F1F5F9] text-[#1A1F2C] hover:bg-[#005E6E] hover:text-white text-center;
   }
   
   .confetti {

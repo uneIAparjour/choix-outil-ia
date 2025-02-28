@@ -179,8 +179,8 @@ const DecisionTree: React.FC = () => {
                 id={`step-${stepId}`}
                 className={`rounded-xl border ${
                   isLastStep 
-                    ? "border-[#005E6E] bg-[#30F8FA] shadow-lg shadow-[#005E6E]/5" 
-                    : "border-[#E5E7EB] bg-[#30F8FA]/70"
+                    ? "border-[#005E6E] bg-[#F8F8FA] shadow-lg shadow-[#005E6E]/5" 
+                    : "border-[#E5E7EB] bg-[#F8F8FA]"
                 } ${
                   isConclusion && stepId === "17" ? "bg-[#F0FDF4] border-[#4ADE80]" : ""
                 } transition-all duration-300 hover:shadow-md`}
@@ -238,7 +238,7 @@ const DecisionTree: React.FC = () => {
                           {step.choices.map((choice, idx) => (
                             <button
                               key={idx}
-                              className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#005E6E] hover:bg-[#005E6E]/80 text-white font-medium"
+                              className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#005E6E] hover:bg-[#005E6E]/80 text-white font-medium text-center"
                               onClick={() => handleChoice(choice.nextStep)}
                             >
                               {choice.text}
