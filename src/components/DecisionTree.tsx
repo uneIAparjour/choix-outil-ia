@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw } from "lucide-react";
@@ -6,6 +5,7 @@ import { decisionTreeData } from "@/data/decisionTreeData";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
@@ -162,95 +162,118 @@ const DecisionTree: React.FC = () => {
         </button>
       </div>
 
-      <div className="space-y-6">
-        {currentPath.map((stepId, index) => {
-          const step = decisionTreeData.find((s) => s.id === stepId);
-          if (!step) return null;
+      <TooltipProvider>
+        <div className="space-y-6">
+          {currentPath.map((stepId, index) => {
+            const step = decisionTreeData.find((s) => s.id === stepId);
+            if (!step) return null;
 
-          const isExpanded = expandedSteps.has(stepId);
-          const isLastStep = index === currentPath.length - 1;
-          const isConclusion = stepId === "17" || stepId === "19";
+            const isExpanded = expandedSteps.has(stepId);
+            const isLastStep = index === currentPath.length - 1;
+            const isConclusion = stepId === "17" || stepId === "19";
 
-          return (
-            <div
-              key={stepId}
-              id={`step-${stepId}`}
-              className={`rounded-xl border ${
-                isLastStep 
-                  ? "border-[#6172F3] bg-white shadow-lg shadow-[#6172F3]/5" 
-                  : "border-[#E5E7EB] bg-white/50"
-              } ${
-                isConclusion && stepId === "17" ? "bg-[#F0FDF4] border-[#4ADE80]" : ""
-              } transition-all duration-300 hover:shadow-md`}
-              onClick={() => {
-                if (!isLastStep) {
-                  jumpToStep(index);
-                }
-              }}
-            >
-              <div className="p-6">
-                <div className="flex justify-between items-start gap-4">
-                  <div className="flex items-start gap-2">
-                    <h3 className="font-semibold text-[#2D3648] text-lg">
-                      {isConclusion ? (
-                        <span className="flex items-center gap-2">
-                          {stepId === "17" && <Trophy className="text-[#4ADE80]" size={24} />}
-                          {stepId === "19" && <Search className="text-[#2D3648]" size={24} />}
-                          {step.question}
-                        </span>
-                      ) : (
-                        <>{step.question}</>
+            return (
+              <div
+                key={stepId}
+                id={`step-${stepId}`}
+                className={`rounded-xl border ${
+                  isLastStep 
+                    ? "border-[#6172F3] bg-white shadow-lg shadow-[#6172F3]/5" 
+                    : "border-[#E5E7EB] bg-white/50"
+                } ${
+                  isConclusion && stepId === "17" ? "bg-[#F0FDF4] border-[#4ADE80]" : ""
+                } transition-all duration-300 hover:shadow-md`}
+                onClick={() => {
+                  if (!isLastStep) {
+                    jumpToStep(index);
+                  }
+                }}
+              >
+                <div className="p-6">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex items-start gap-2">
+                      <h3 className="font-semibold text-[#2D3648] text-lg">
+                        {isConclusion ? (
+                          <span className="flex items-center gap-2">
+                            {stepId === "17" && <Trophy className="text-[#4ADE80]" size={24} />}
+                            {stepId === "19" && <Search className="text-[#2D3648]" size={24} />}
+                            {step.question}
+                          </span>
+                        ) : (
+                          <>{step.question}</>
+                        )}
+                      </h3>
+                      {step.infoTooltip && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button className="mt-1 p-1 rounded-full hover:bg-[#EEF1FF] text-[#6172F3] transition-colors">
+                              <Info size={16} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            className="max-w-sm p-4 text-sm bg-white/95 border border-gray-200 shadow-lg leading-relaxed" 
+                            side="top" 
+                            sideOffset={5}
+                            align="start"
+                          >
+                            <div dangerouslySetInnerHTML={{ 
+                              __html: step.infoTooltip.replace(/\n/g, '<br>') 
+                            }} />
+                          </TooltipContent>
+                        </Tooltip>
                       )}
-                    </h3>
-                    {step.infoTooltip && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button className="mt-1 p-1 rounded-full hover:bg-[#EEF1FF] text-[#6172F3] transition-colors">
-                            <Info size={16} />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-sm p-4 text-sm leading-relaxed" side="right">
-                          <div dangerouslySetInnerHTML={{ 
-                            __html: step.infoTooltip.replace(/\n/g, '<br>') 
-                          }} />
-                        </TooltipContent>
-                      </Tooltip>
+                    </div>
+                    {!isLastStep && (
+                      <button className="text-[#6172F3] p-1 hover:bg-[#EEF1FF] rounded-full transition-colors">
+                        {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                      </button>
                     )}
                   </div>
-                  {!isLastStep && (
-                    <button className="text-[#6172F3] p-1 hover:bg-[#EEF1FF] rounded-full transition-colors">
-                      {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                    </button>
+                  
+                  {(isExpanded || isLastStep) && (
+                    <div className="mt-6 animate-fade-in">
+                      {isLastStep && (
+                        <div className="flex flex-col gap-3 mt-4">
+                          {step.choices.map((choice, idx) => (
+                            <button
+                              key={idx}
+                              className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#F4F6FF] hover:bg-[#6172F3] text-[#2D3648] hover:text-white font-medium"
+                              onClick={() => handleChoice(choice.nextStep)}
+                            >
+                              {choice.text}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
-                
-                {(isExpanded || isLastStep) && (
-                  <div className="mt-6 animate-fade-in">
-                    {isLastStep && (
-                      <div className="flex flex-col gap-3 mt-4">
-                        {step.choices.map((choice, idx) => (
-                          <button
-                            key={idx}
-                            className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#F4F6FF] hover:bg-[#6172F3] text-[#2D3648] hover:text-white font-medium"
-                            onClick={() => handleChoice(choice.nextStep)}
-                          >
-                            {choice.text}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      </TooltipProvider>
 
-      <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center text-sm text-[#6B7280]">
-        <p>
-          WIP par <a href="mailto:uneIAparjour@gmail.com" className="text-[#6172F3] hover:underline">BF</a> / RC
+      <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
+        <p className="mb-4 text-sm text-[#6B7280]">
+          <em>WIP par <a href="mailto:uneIAparjour@gmail.com" className="text-[#6172F3] hover:underline">BF</a></em>
         </p>
+        
+        <div className="text-sm text-[#6B7280]">
+          <p className="font-medium mb-2">Liens utiles :</p>
+          <ul className="space-y-1">
+            <li>
+              <a href="https://www.reseau-canope.fr/ia-en-classe" target="_blank" rel="noopener noreferrer" className="text-[#6172F3] hover:underline">
+                - Formations et ressources sur les IA génératives
+              </a>
+            </li>
+            <li>
+              <a href="https://www.uneiaparjour.fr/" target="_blank" rel="noopener noreferrer" className="text-[#6172F3] hover:underline">
+                - Découvrir des outils d'IA génératives
+              </a>
+            </li>
+          </ul>
+        </div>
       </footer>
     </div>
   );

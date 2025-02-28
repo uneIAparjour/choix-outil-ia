@@ -1,8 +1,9 @@
+
 // Data structure for our decision tree
 export const decisionTreeData = [
   {
     id: "1",
-    question: "J'ai cherché et trouvé une application d'IA générative qui me semble intéressante",
+    question: "J'ai cherché et trouvé une application d'IA générative qui pourrait m'accompagner dans la réalisation d'une ou plusieurs tâches",
     choices: [
       { text: "Je commence l'analyse de l'application", nextStep: "2" }
     ]
@@ -245,7 +246,7 @@ export const decisionTreeData = [
     question: "Je cherche un autre outil d'IA générative",
     choices: [
       { text: "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant", nextStep: "Retour à Étape 1" },
-      { text: "J'ai cherché et n'ai pas trouvé d'autre outil d'IA générative qui me semble intéressant", nextStep: "19" }
+      { text: "J'ai cherché et n'ai pas trouvé d'autre outil d'IA générative qui me semble intéressant", nextStep: "16" }
     ],
     isAction: true
   },
