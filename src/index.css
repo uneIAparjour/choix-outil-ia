@@ -130,6 +130,24 @@
     border-style: solid;
     border-color: #1A1F2C transparent transparent transparent;
   }
+  
+  /* Mobile tooltip adjustments */
+  @media (max-width: 768px) {
+    .tooltip {
+      width: 200px;
+      bottom: auto;
+      top: -5px;
+      left: 50%;
+      transform: translate(-50%, -100%);
+    }
+    
+    .tooltip::after {
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-color: #1A1F2C transparent transparent transparent;
+    }
+  }
 }
 
 html {

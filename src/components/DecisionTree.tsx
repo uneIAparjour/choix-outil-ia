@@ -213,9 +213,9 @@ const DecisionTree: React.FC = () => {
                           </TooltipTrigger>
                           <TooltipContent 
                             className="max-w-sm p-4 text-sm bg-white/95 border border-gray-200 shadow-lg leading-relaxed opacity-95" 
-                            side="right" 
+                            side="top" 
                             sideOffset={5}
-                            align="start"
+                            align="center"
                           >
                             <div dangerouslySetInnerHTML={{ 
                               __html: step.infoTooltip.replace(/\n/g, '<br>') 
