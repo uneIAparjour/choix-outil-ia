@@ -25,8 +25,8 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: "#6172F3",
-        secondary: "#2D3648",
+        primary: "#005E6E",
+        secondary: "#30F8FA",
         accent: "#EEF1FF",
         success: "#4ADE80",
         warning: "#F59E0B",
@@ -34,7 +34,7 @@ export default {
         muted: "#6B7280",
       },
       fontFamily: {
-        "plus-jakarta": ["Plus Jakarta Sans", "sans-serif"],
+        marianne: ["Marianne", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

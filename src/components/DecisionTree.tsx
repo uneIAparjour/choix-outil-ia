@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw } from "lucide-react";
@@ -115,7 +116,7 @@ const DecisionTree: React.FC = () => {
   };
 
   const createConfetti = (container: HTMLDivElement) => {
-    const colors = ["#9b87f5", "#1EAEDB", "#F2FCE2", "#D6BCFA"];
+    const colors = ["#005E6E", "#30F8FA", "#F2FCE2", "#D6BCFA"];
     
     for (let i = 0; i < 50; i++) {
       const confetti = document.createElement("div");
@@ -146,15 +147,15 @@ const DecisionTree: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 min-h-screen bg-gradient-to-br from-[#F4F6FF] to-white font-plus-jakarta" ref={treeRef}>
+    <div className="max-w-4xl mx-auto py-12 px-4 min-h-screen bg-white font-marianne" ref={treeRef}>
       <div className="flex flex-col items-center justify-center mb-16 text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6172F3] to-[#4361EE] leading-tight drop-shadow-sm mb-6">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#005E6E] leading-tight mb-6">
           Aide au choix d'une application<br/>utilisant l'IA générative
         </h1>
-        <div className="w-20 h-1 bg-gradient-to-r from-[#6172F3] to-[#4361EE] rounded-full mb-6"></div>
+        <div className="w-20 h-1 bg-[#005E6E] rounded-full mb-6"></div>
         <button
           onClick={resetTree}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#EEF1FF] hover:bg-[#E2E7FF] text-[#6172F3] transition-colors shadow-sm"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#EEF1FF] hover:bg-[#E2E7FF] text-[#005E6E] transition-colors shadow-sm"
           title="Réinitialiser le parcours"
         >
           <RotateCcw size={18} />
@@ -178,8 +179,8 @@ const DecisionTree: React.FC = () => {
                 id={`step-${stepId}`}
                 className={`rounded-xl border ${
                   isLastStep 
-                    ? "border-[#6172F3] bg-white shadow-lg shadow-[#6172F3]/5" 
-                    : "border-[#E5E7EB] bg-white/50"
+                    ? "border-[#005E6E] bg-[#30F8FA] shadow-lg shadow-[#005E6E]/5" 
+                    : "border-[#E5E7EB] bg-[#30F8FA]/70"
                 } ${
                   isConclusion && stepId === "17" ? "bg-[#F0FDF4] border-[#4ADE80]" : ""
                 } transition-all duration-300 hover:shadow-md`}
@@ -206,13 +207,13 @@ const DecisionTree: React.FC = () => {
                       {step.infoTooltip && (
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <button className="mt-1 p-1 rounded-full hover:bg-[#EEF1FF] text-[#6172F3] transition-colors">
+                            <button className="mt-1 p-1 rounded-full hover:bg-[#005E6E]/20 text-[#005E6E] transition-colors">
                               <Info size={16} />
                             </button>
                           </TooltipTrigger>
                           <TooltipContent 
-                            className="max-w-sm p-4 text-sm bg-white/95 border border-gray-200 shadow-lg leading-relaxed" 
-                            side="top" 
+                            className="max-w-sm p-4 text-sm bg-white/95 border border-gray-200 shadow-lg leading-relaxed opacity-95" 
+                            side="right" 
                             sideOffset={5}
                             align="start"
                           >
@@ -224,7 +225,7 @@ const DecisionTree: React.FC = () => {
                       )}
                     </div>
                     {!isLastStep && (
-                      <button className="text-[#6172F3] p-1 hover:bg-[#EEF1FF] rounded-full transition-colors">
+                      <button className="text-[#005E6E] p-1 hover:bg-[#005E6E]/20 rounded-full transition-colors">
                         {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                       </button>
                     )}
@@ -237,7 +238,7 @@ const DecisionTree: React.FC = () => {
                           {step.choices.map((choice, idx) => (
                             <button
                               key={idx}
-                              className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#F4F6FF] hover:bg-[#6172F3] text-[#2D3648] hover:text-white font-medium"
+                              className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#005E6E] hover:bg-[#005E6E]/80 text-white font-medium"
                               onClick={() => handleChoice(choice.nextStep)}
                             >
                               {choice.text}
@@ -256,20 +257,20 @@ const DecisionTree: React.FC = () => {
 
       <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
         <p className="mb-4 text-sm text-[#6B7280]">
-          <em>WIP par <a href="mailto:uneIAparjour@gmail.com" className="text-[#6172F3] hover:underline">BF</a></em>
+          <em>WIP par <a href="mailto:uneIAparjour@gmail.com" className="text-[#005E6E] hover:underline">BF</a></em>
         </p>
         
         <div className="text-sm text-[#6B7280]">
-          <p className="font-medium mb-2">Liens utiles :</p>
+          <p className="font-medium mb-2">Liens utiles</p>
           <ul className="space-y-1">
             <li>
-              <a href="https://www.reseau-canope.fr/ia-en-classe" target="_blank" rel="noopener noreferrer" className="text-[#6172F3] hover:underline">
-                - Formations et ressources sur les IA génératives
+              <a href="https://www.reseau-canope.fr/ia-en-classe" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">
+                Formations et ressources sur les IA génératives
               </a>
             </li>
             <li>
-              <a href="https://www.uneiaparjour.fr/" target="_blank" rel="noopener noreferrer" className="text-[#6172F3] hover:underline">
-                - Découvrir des outils d'IA génératives
+              <a href="https://www.uneiaparjour.fr/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">
+                Découvrir des outils d'IA génératives
               </a>
             </li>
           </ul>

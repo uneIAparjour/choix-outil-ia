@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F4F6FF] to-white">
+    <div className="min-h-screen bg-white">
       <TooltipProvider>
         <DecisionTree />
       </TooltipProvider>
