@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw, Check, X } from "lucide-react";
@@ -20,10 +21,17 @@ interface Step {
   isAction?: boolean;
 }
 
+interface StepOutcome {
+  stepId: string;
+  choiceText: string;
+  isPositive: boolean;
+}
+
 const DecisionTree: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string[]>(["1"]);
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set(["1"]));
   const [showConfetti, setShowConfetti] = useState(false);
+  const [stepOutcomes, setStepOutcomes] = useState<StepOutcome[]>([]);
   const treeRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -32,7 +40,51 @@ const DecisionTree: React.FC = () => {
     return decisionTreeData.find((step) => step.id === currentStepId);
   };
 
-  const handleChoice = (nextStep: string) => {
+  const isPositiveChoice = (stepId: string, choiceText: string): boolean => {
+    // Default rules
+    if (choiceText.startsWith("Oui") || choiceText.startsWith("Je ne sais pas") || choiceText.startsWith("J'ai suivi cette étape")) {
+      // Special case exceptions
+      if (stepId === "3.2" && choiceText === "Je ne sais toujours pas") {
+        return false;
+      } else if (stepId === "8" && choiceText === "Je ne sais pas") {
+        return false;
+      } else if (stepId === "8.1" && choiceText === "Je ne sais toujours pas") {
+        return false;
+      } else if (stepId === "12" && choiceText === "Non") {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (stepId === "4" && (choiceText === "Non, vérification effectuée avant le 02/08/2025")) {
+      return true;
+    } else if (stepId === "6.1" && choiceText === "J'ai trouvé / reçu des informations claires") {
+      return true;
+    } else if (stepId === "8" && choiceText === "Non") {
+      return true;
+    } else if (stepId === "8.1" && choiceText === "L'application n'utilise pas de main-d'œuvre peu payée voire exploitée pour l'entraînement ou le fonctionnement de l'IA") {
+      return true;
+    } else if (stepId === "12" && choiceText === "Je l'utiliserai seule / seul") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleChoice = (nextStep: string, choiceText: string) => {
+    const currentStep = getCurrentStep();
+    
+    if (currentStep) {
+      // Record outcome for this step
+      setStepOutcomes(prev => [
+        ...prev,
+        {
+          stepId: currentStep.id,
+          choiceText,
+          isPositive: isPositiveChoice(currentStep.id, choiceText)
+        }
+      ]);
+    }
+
     if (nextStep.startsWith("Retour")) {
       const stepMatch = nextStep.match(/Étape (\d+\.?\d*)/);
       if (stepMatch && stepMatch[1]) {
@@ -95,6 +147,9 @@ const DecisionTree: React.FC = () => {
     const newPath = currentPath.slice(0, index + 1);
     setCurrentPath(newPath);
     
+    // Adjust step outcomes as well
+    setStepOutcomes(prev => prev.slice(0, index));
+    
     const newExpandedSteps = new Set<string>();
     newExpandedSteps.add(targetStepId);
     setExpandedSteps(newExpandedSteps);
@@ -136,6 +191,7 @@ const DecisionTree: React.FC = () => {
     setCurrentPath(["1"]);
     setExpandedSteps(new Set(["1"]));
     setShowConfetti(false);
+    setStepOutcomes([]);
     
     toast({
       title: "Arbre de décision réinitialisé",
@@ -145,20 +201,26 @@ const DecisionTree: React.FC = () => {
     setTimeout(() => scrollToLatestStep(), 100);
   };
 
+  const getStepOutcome = (stepId: string): boolean | undefined => {
+    const outcome = stepOutcomes.find(o => o.stepId === stepId);
+    return outcome ? outcome.isPositive : undefined;
+  };
+
   const renderPathSummary = () => {
     if (!["17", "19"].includes(currentPath[currentPath.length - 1])) {
       return null;
     }
 
-    const visitedSteps = new Set(currentPath);
     const allSteps = decisionTreeData.filter(step => !step.isAction);
+    const visitedStepsMap = new Map(stepOutcomes.map(o => [o.stepId, o.isPositive]));
 
     return (
       <div className="mt-12 p-6 bg-[#F8F8FA] rounded-xl border border-[#E5E7EB] animate-fade-in">
         <h3 className="text-lg font-semibold text-[#005E6E] mb-4">Résumé de votre parcours</h3>
         <div className="space-y-3">
           {allSteps.map(step => {
-            const isVisited = visitedSteps.has(step.id);
+            const isVisited = visitedStepsMap.has(step.id);
+            const isPositive = visitedStepsMap.get(step.id);
             const isLastStep = step.id === currentPath[currentPath.length - 1];
             const showStep = ["17", "19"].includes(step.id) ? isLastStep : true;
 
@@ -167,7 +229,11 @@ const DecisionTree: React.FC = () => {
             return (
               <div key={step.id} className="flex items-start gap-3">
                 {isVisited ? (
-                  <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
+                  isPositive ? (
+                    <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
+                  ) : (
+                    <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
+                  )
                 ) : (
                   <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
                 )}
@@ -206,6 +272,7 @@ const DecisionTree: React.FC = () => {
             const isExpanded = expandedSteps.has(stepId);
             const isLastStep = index === currentPath.length - 1;
             const isConclusion = stepId === "17" || stepId === "19";
+            const stepOutcome = getStepOutcome(stepId);
 
             return (
               <div
@@ -227,6 +294,15 @@ const DecisionTree: React.FC = () => {
                 <div className="p-6">
                   <div className="flex justify-between items-start gap-4">
                     <div className="flex items-start gap-2">
+                      {!isLastStep && stepOutcome !== undefined && (
+                        <div className="mt-1 flex-shrink-0">
+                          {stepOutcome ? (
+                            <Check className="w-5 h-5 text-green-500" />
+                          ) : (
+                            <X className="w-5 h-5 text-red-500" />
+                          )}
+                        </div>
+                      )}
                       <h3 className="font-semibold text-[#2D3648] text-lg">
                         {isConclusion ? (
                           <span className="flex items-center gap-2">
@@ -273,7 +349,7 @@ const DecisionTree: React.FC = () => {
                             <button
                               key={idx}
                               className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#005E6E] hover:bg-[#005E6E]/80 text-white font-medium text-center"
-                              onClick={() => handleChoice(choice.nextStep)}
+                              onClick={() => handleChoice(choice.nextStep, choice.text)}
                             >
                               {choice.text}
                             </button>
