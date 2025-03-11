@@ -1,14 +1,13 @@
-
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw } from "lucide-react";
+import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw, Check, X } from "lucide-react";
 import { decisionTreeData } from "@/data/decisionTreeData";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 interface Step {
   id: string;
@@ -146,6 +145,41 @@ const DecisionTree: React.FC = () => {
     setTimeout(() => scrollToLatestStep(), 100);
   };
 
+  const renderPathSummary = () => {
+    if (!["17", "19"].includes(currentPath[currentPath.length - 1])) {
+      return null;
+    }
+
+    const visitedSteps = new Set(currentPath);
+    const allSteps = decisionTreeData.filter(step => !step.isAction);
+
+    return (
+      <div className="mt-12 p-6 bg-[#F8F8FA] rounded-xl border border-[#E5E7EB] animate-fade-in">
+        <h3 className="text-lg font-semibold text-[#005E6E] mb-4">Résumé de votre parcours</h3>
+        <div className="space-y-3">
+          {allSteps.map(step => {
+            const isVisited = visitedSteps.has(step.id);
+            const isLastStep = step.id === currentPath[currentPath.length - 1];
+            const showStep = ["17", "19"].includes(step.id) ? isLastStep : true;
+
+            if (!showStep) return null;
+
+            return (
+              <div key={step.id} className="flex items-start gap-3">
+                {isVisited ? (
+                  <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
+                ) : (
+                  <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
+                )}
+                <p className="text-sm text-gray-700">{step.question}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 min-h-screen bg-white font-marianne" ref={treeRef}>
       <div className="flex flex-col items-center justify-center mb-16 text-center">
@@ -252,6 +286,7 @@ const DecisionTree: React.FC = () => {
               </div>
             );
           })}
+          {renderPathSummary()}
         </div>
       </TooltipProvider>
 
