@@ -71,6 +71,12 @@ const DecisionTree: React.FC = () => {
       return true;
     } else if (stepId === "12" && choiceText === "Je l'utiliserai seule / seul") {
       return true;
+    } else if (stepId === "17" && choiceText.startsWith("Bravo ! Vous avez trouvé l'outil qui vous convient")) {
+      return true;
+    } else if (stepId === "16" && choiceText === "Oui (Mes valeurs personnelles, mes valeurs professionnelles et mon cadre d'utilisation me permettent de laisser de côté un critère de choix)") {
+      return true;
+    } else if (stepId === "16" && choiceText === "Non (Mes valeurs personnelles, mes valeurs professionnelles et mon cadre d'utilisation ne me permettent pas de laisser de côté un ou plusieurs critères de choix)") {
+      return false;
     } else {
       return false;
     }
@@ -89,6 +95,21 @@ const DecisionTree: React.FC = () => {
           isPositive: isPositiveChoice(currentStep.id, choiceText)
         }
       ]);
+    }
+
+    // Check if we need to generate a summary sheet
+    const shouldShowSummary = 
+      (currentStep?.id === "18" && choiceText === "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant") ||
+      currentStep?.id === "16";
+
+    if (shouldShowSummary) {
+      setShowConfetti(true);
+      
+      if (treeRef.current) {
+        createConfetti(treeRef.current);
+      }
+      
+      setTimeout(() => setShowConfetti(false), 3000);
     }
 
     if (nextStep.startsWith("Retour")) {
@@ -213,7 +234,15 @@ const DecisionTree: React.FC = () => {
   };
 
   const renderPathSummary = () => {
-    if (!["17", "19"].includes(currentPath[currentPath.length - 1])) {
+    const lastStepId = currentPath[currentPath.length - 1];
+    const hasReachedConclusion = ["17", "19"].includes(lastStepId);
+    const shouldShowInterimSummary = stepOutcomes.some(
+      outcome => 
+        (outcome.stepId === "18" && outcome.choiceText === "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant") ||
+        outcome.stepId === "16"
+    );
+
+    if (!hasReachedConclusion && !shouldShowInterimSummary) {
       return null;
     }
 
@@ -222,13 +251,17 @@ const DecisionTree: React.FC = () => {
 
     return (
       <div className="mt-12 p-6 bg-[#F8F8FA] rounded-xl border border-[#E5E7EB] animate-fade-in">
-        <h3 className="text-lg font-semibold text-[#005E6E] mb-4">Résumé de votre parcours</h3>
+        <h3 className="text-lg font-semibold text-[#005E6E] mb-4">
+          {shouldShowInterimSummary && !hasReachedConclusion 
+            ? "Feuille bilan de votre parcours" 
+            : "Résumé de votre parcours"}
+        </h3>
         <div className="space-y-3">
           {allSteps.map(step => {
             const isVisited = visitedStepsMap.has(step.id);
             const isPositive = visitedStepsMap.get(step.id);
-            const isLastStep = step.id === currentPath[currentPath.length - 1];
-            const showStep = ["17", "19"].includes(step.id) ? isLastStep : true;
+            const isLastStep = step.id === lastStepId;
+            const showStep = isVisited || ["17", "19"].includes(step.id) ? isLastStep : true;
 
             if (!showStep) return null;
 
