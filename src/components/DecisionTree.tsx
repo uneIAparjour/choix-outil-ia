@@ -55,6 +55,12 @@ const DecisionTree: React.FC = () => {
       } else {
         return true;
       }
+    } else if (stepId === "1" && choiceText === "Je commence l'analyse de l'application") {
+      return true;
+    } else if (stepId === "18" && choiceText === "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant") {
+      return true;
+    } else if (stepId === "18" && choiceText === "J'ai cherché et n'ai pas trouvé d'autre outil d'IA générative qui me semble intéressant") {
+      return false;
     } else if (stepId === "4" && (choiceText === "Non, vérification effectuée avant le 02/08/2025")) {
       return true;
     } else if (stepId === "6.1" && choiceText === "J'ai trouvé / reçu des informations claires") {
