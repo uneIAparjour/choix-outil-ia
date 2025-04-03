@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw, Check, X } from "lucide-react";
@@ -260,19 +259,13 @@ const DecisionTree: React.FC = () => {
           {allSteps.map(step => {
             const isVisited = visitedStepsMap.has(step.id);
             const isPositive = visitedStepsMap.get(step.id);
-            const isLastStep = step.id === lastStepId;
-            const showStep = isVisited || ["17", "19"].includes(step.id) ? isLastStep : true;
-
-            if (!showStep) return null;
-
+            
+            if (!isVisited) return null;
+            
             return (
               <div key={step.id} className="flex items-start gap-3">
-                {isVisited ? (
-                  isPositive ? (
-                    <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                  ) : (
-                    <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-                  )
+                {isPositive ? (
+                  <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
                 ) : (
                   <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
                 )}
