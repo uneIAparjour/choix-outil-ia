@@ -29,7 +29,6 @@ interface StepOutcome {
 const DecisionTree: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string[]>(["1"]);
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set(["1"]));
-  const [showConfetti, setShowConfetti] = useState(false);
   const [stepOutcomes, setStepOutcomes] = useState<StepOutcome[]>([]);
   const treeRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
