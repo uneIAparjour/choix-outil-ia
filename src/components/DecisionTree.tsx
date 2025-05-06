@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw, Check, X } from "lucide-react";
@@ -100,16 +101,6 @@ const DecisionTree: React.FC = () => {
       (currentStep?.id === "18" && choiceText === "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant") ||
       currentStep?.id === "16";
 
-    if (shouldShowSummary) {
-      setShowConfetti(true);
-      
-      if (treeRef.current) {
-        createConfetti(treeRef.current);
-      }
-      
-      setTimeout(() => setShowConfetti(false), 3000);
-    }
-
     if (nextStep.startsWith("Retour")) {
       const stepMatch = nextStep.match(/Étape (\d+\.?\d*)/);
       if (stepMatch && stepMatch[1]) {
@@ -130,16 +121,6 @@ const DecisionTree: React.FC = () => {
 
     const nextStepData = decisionTreeData.find((step) => step.id === nextStep);
     if (nextStepData && (nextStep === "17" || nextStep === "19")) {
-      if (nextStep === "17") {
-        setShowConfetti(true);
-        
-        if (treeRef.current) {
-          createConfetti(treeRef.current);
-        }
-        
-        setTimeout(() => setShowConfetti(false), 3000);
-      }
-      
       const newExpandedSteps = new Set<string>();
       newExpandedSteps.add(nextStep);
       setExpandedSteps(newExpandedSteps);
@@ -194,28 +175,9 @@ const DecisionTree: React.FC = () => {
     }
   };
 
-  const createConfetti = (container: HTMLDivElement) => {
-    const colors = ["#005E6E", "#30F8FA", "#F2FCE2", "#D6BCFA"];
-    
-    for (let i = 0; i < 50; i++) {
-      const confetti = document.createElement("div");
-      confetti.className = "confetti";
-      confetti.style.left = `${Math.random() * 100}%`;
-      confetti.style.top = `${Math.random() * 100}%`;
-      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      confetti.style.animationDelay = `${Math.random() * 0.5}s`;
-      container.appendChild(confetti);
-      
-      setTimeout(() => {
-        confetti.remove();
-      }, 2000);
-    }
-  };
-
   const resetTree = () => {
     setCurrentPath(["1"]);
     setExpandedSteps(new Set(["1"]));
-    setShowConfetti(false);
     setStepOutcomes([]);
     
     toast({
