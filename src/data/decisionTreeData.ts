@@ -1,4 +1,3 @@
-
 // Data structure for our decision tree
 export const decisionTreeData = [
   {
@@ -170,8 +169,23 @@ export const decisionTreeData = [
     id: "13",
     question: "Je souhaite utiliser cet outil dans un cadre pédagogique ?",
     choices: [
-      { text: "Oui", nextStep: "14" },
+      { text: "Oui", nextStep: "13.1" },
       { text: "Non", nextStep: "17" }
+    ]
+  },
+  {
+    id: "13.1",
+    question: "Je souhaite utiliser cette application avec des élèves à partir de la 4ème comme indiqué dans le Cadre d'usage de l'IA en éducation ?",
+    choices: [
+      { text: "Oui", nextStep: "14" },
+      { text: "Les élèves ne sont pas encore en 4ème", nextStep: "13.2" }
+    ]
+  },
+  {
+    id: "13.2",
+    question: "Je ne peux pas utiliser d'outil d'IA générative avec mes élèves avant la 4ème",
+    choices: [
+      { text: "Je cherche un autre outil d'IA générative", nextStep: "18" }
     ]
   },
   {

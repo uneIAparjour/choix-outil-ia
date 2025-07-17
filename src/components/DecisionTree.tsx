@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw, Check, X } from "lucide-react";
@@ -75,6 +74,10 @@ const DecisionTree: React.FC = () => {
     } else if (stepId === "16" && choiceText === "Oui (Mes valeurs personnelles, mes valeurs professionnelles et mon cadre d'utilisation me permettent de laisser de côté un critère de choix)") {
       return true;
     } else if (stepId === "16" && choiceText === "Non (Mes valeurs personnelles, mes valeurs professionnelles et mon cadre d'utilisation ne me permettent pas de laisser de côté un ou plusieurs critères de choix)") {
+      return false;
+    } else if (stepId === "13.1" && choiceText === "Les élèves ne sont pas encore en 4ème") {
+      return false;
+    } else if (stepId === "13.2" && choiceText === "Je cherche un autre outil d'IA générative") {
       return false;
     } else {
       return false;
