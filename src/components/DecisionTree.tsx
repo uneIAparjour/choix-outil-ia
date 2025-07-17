@@ -223,6 +223,7 @@ const DecisionTree: React.FC = () => {
           {allSteps.map(step => {
             const isVisited = visitedStepsMap.has(step.id);
             const isPositive = visitedStepsMap.get(step.id);
+            const outcome = stepOutcomes.find(o => o.stepId === step.id);
             
             if (!isVisited) return null;
             
@@ -233,7 +234,12 @@ const DecisionTree: React.FC = () => {
                 ) : (
                   <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
                 )}
-                <p className="text-sm text-gray-700">{step.question}</p>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-700">{step.question}</p>
+                  {outcome && (
+                    <p className="text-sm text-[#005E6E] font-medium mt-1">→ {outcome.choiceText}</p>
+                  )}
+                </div>
               </div>
             );
           })}
