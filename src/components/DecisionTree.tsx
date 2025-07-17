@@ -364,23 +364,15 @@ const DecisionTree: React.FC = () => {
 
       <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
         <p className="mb-4 text-sm text-[#6B7280]">
-          <em>WIP par <a href="mailto:uneIAparjour@gmail.com" className="text-[#005E6E] hover:underline">BF</a></em>
+          Réalisé avec <a href="https://www.uneiaparjour.fr/lovable/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">Lovable.dev</a> par <a href="https://www.uneiaparjour.fr/lovable/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">uneIAparjour.fr</a>.
         </p>
         
         <div className="text-sm text-[#6B7280]">
-          <p className="font-medium mb-2">Liens utiles</p>
-          <ul className="space-y-1">
-            <li>
-              <a href="https://www.reseau-canope.fr/ia-en-classe" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">
-                Formations et ressources sur les IA génératives
-              </a>
-            </li>
-            <li>
-              <a href="https://www.uneiaparjour.fr/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">
-                Découvrir des outils d'IA génératives
-              </a>
-            </li>
-          </ul>
+          <p className="mb-2">
+            Mise à disposition sous <a href="https://creativecommons.org/licenses/by/4.0/deed.fr" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">license Creative commons CC BY</a>.
+          </p>
+          <p className="mb-2">Github : lien à venir</p>
+          <p>Dernière mise à jour : juillet 2025</p>
         </div>
       </footer>
     </div>
