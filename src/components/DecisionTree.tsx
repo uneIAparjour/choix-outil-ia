@@ -370,7 +370,7 @@ const DecisionTree: React.FC = () => {
 
       <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
         <p className="mb-4 text-sm text-[#6B7280]">
-          Réalisé avec <a href="https://www.uneiaparjour.fr/lovable/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">Lovable.dev</a> par <a href="https://www.uneiaparjour.fr/lovable/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">uneIAparjour.fr</a>.
+          Réalisé avec <a href="https://www.uneiaparjour.fr/lovable/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">Lovable.dev</a> par <a href="https://www.uneiaparjour.fr" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">uneIAparjour.fr</a>.
         </p>
         
         <div className="text-sm text-[#6B7280]">
