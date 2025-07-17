@@ -99,7 +99,7 @@ export const decisionTreeData = [
   },
   {
     id: "8",
-    question: "L'application utilise-t-elle ou a-t-elle utilisé de la main-d'œuvre peu payée voire exploitée pour l'entraînement ou le fonctionnement de l'IA ?",
+    question: "L'application utilise-t-elle ou a-t-elle utilisé des employés ou sous-traitants peu payés voire exploités pour l'entraînement ou le fonctionnement de l'IA ?",
     choices: [
       { text: "Oui", nextStep: "18" },
       { text: "Non", nextStep: "9" },
@@ -110,7 +110,7 @@ export const decisionTreeData = [
     id: "8.1",
     question: "Recherchez des informations sur les pratiques éthiques de l'entreprise, consultez l'annuaire des membres de l'association fairlabor.org ou des articles de presse traitant ce sujet.",
     choices: [
-      { text: "L'application n'utilise pas de main-d'œuvre peu payée voire exploitée pour l'entraînement ou le fonctionnement de l'IA", nextStep: "9" },
+      { text: "L'application n'utilise pas d'employés ou sous-traitants peu payés voire exploités pour l'entraînement ou le fonctionnement de l'IA", nextStep: "9" },
       { text: "Je ne sais toujours pas", nextStep: "18" }
     ],
     isAction: true
@@ -179,7 +179,8 @@ export const decisionTreeData = [
     choices: [
       { text: "Oui", nextStep: "14" },
       { text: "Les élèves ne sont pas encore en 4ème", nextStep: "13.2" }
-    ]
+    ],
+    infoTooltip: "Cadre d'usage de l'IA en éducation : https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647e"
   },
   {
     id: "13.2",
