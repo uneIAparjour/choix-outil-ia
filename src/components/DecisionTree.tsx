@@ -371,7 +371,7 @@ const DecisionTree: React.FC = () => {
           <p className="mb-2">
             Mise à disposition sous <a href="https://creativecommons.org/licenses/by/4.0/deed.fr" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">license Creative commons CC BY</a>.
           </p>
-          <p className="mb-2">Github : lien à venir</p>
+          <p className="mb-2">Github : <a href="https://github.com/uneIAparjour/choix-outil-ia" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">https://github.com/uneIAparjour/choix-outil-ia</a></p>
           <p>Dernière mise à jour : juillet 2025</p>
         </div>
       </footer>
