@@ -180,7 +180,7 @@ export const decisionTreeData = [
       { text: "Oui", nextStep: "14" },
       { text: "Les élèves ne sont pas encore en 4ème", nextStep: "13.2" }
     ],
-    infoTooltip: "Cadre d'usage de l'IA en éducation : https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647e"
+    infoTooltip: "Cadre d'usage de l'IA en éducation : <a href='https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647e' target='_blank' rel='noopener noreferrer' style='color: #005E6E; text-decoration: underline;'>https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647e</a>"
   },
   {
     id: "13.2",
