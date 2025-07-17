@@ -3,9 +3,9 @@
 
 ## Présentation
 
-Cette application web a été conçue pour aider les utilisateurs à évaluer méthodiquement les outils d'IA générative selon un arbre de décision structuré. Elle permet de suivre un processus pas à pas sous forme de briques interactives, qui se replient progressivement pour montrer le chemin parcouru.
+Cette application web a été conçue pour aider les utilisateurs à évaluer méthodiquement les outils d'IA générative selon un arbre de décision structuré.
+Elle permet de suivre un processus pas à pas sous forme de briques interactives, qui se replient progressivement pour montrer le chemin parcouru.
 
-L'interface utilise un design minimaliste et efficace, conforme aux principes du flat design, pour une expérience utilisateur intuitive et claire.
 
 ## Fonctionnalités
 
@@ -13,11 +13,11 @@ L'interface utilise un design minimaliste et efficace, conforme aux principes du
 - **Arbre de décision complet** : Évaluation méthodique des outils d'IA selon plusieurs critères
 - **Infobulles informatives** : Informations complémentaires pour aider à la décision
 - **Design réactif** : Adapté aux ordinateurs et appareils mobiles
-- **Animation de confetti** : Célébration visuelle lorsqu'un outil approprié est trouvé
+  
 
 ## Données
 
-L'application intègre un arbre de décision complet pour guider les utilisateurs à travers le processus d'évaluation des outils d'IA générative, en tenant compte de critères comme :
+L'application intègre un arbre de décision complet pour guider les utilisateurs à travers le processus d'évaluation des outils d'IA générative, en tenant compte de ces critères :
 
 - Conformité au RGPD et à l'AI Act
 - Accessibilité et modèle économique
@@ -27,9 +27,9 @@ L'application intègre un arbre de décision complet pour guider les utilisateur
 - Adéquation avec les valeurs professionnelles
 - Pertinence pour un usage pédagogique
 
-## URL du projet
+## URL de publication
 
-**URL** : https://lovable.dev/projects/5fe08975-52cc-4253-9463-cc465ffece04
+**URL** : https://www.uneiaparjour.fr/aide-au-choix-doutils/ 
 
 ## Technologies utilisées
 
