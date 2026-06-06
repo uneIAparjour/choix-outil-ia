@@ -90,16 +90,15 @@ export const decisionTreeData: Step[] = [
     infoSources: ["https://www.cnil.fr/fr/la-cnil-publie-une-faq-sur-les-transferts-de-donnees-vers-les-etats-unis"],
     pathways: ["personal", "professional", "students"]
   },
-  {
+    {
     id: "4",
     dimension: "compliance",
     question: "L'entreprise qui propose l'application fait-elle mention de sa conformité à l'AI Act ?",
     choices: [
       { text: "Oui (déclaration, certifications, audit)", nextStep: "4.1", complianceLevel: "compliant" },
-      { text: "Non, mais vérification effectuée avant le 02/08/2025", nextStep: "4.1", complianceLevel: "partial", warning: "AI Act non encore applicable au moment de la vérification" },
-      { text: "Non, vérification effectuée après le 02/08/2025", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
+      { text: "Non, aucune mention de conformité à l'AI Act", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
     ],
-    infoTooltip: "L'AI Act devra être pleinement appliqué au 02/08/2025. Ses critères principaux :\n- Transparence : informations claires sur le fonctionnement\n- Sécurité : protection des données et contre les cyberattaques\n- Responsabilité : mécanismes de correction des erreurs ou biais\n- Éthique : absence de discrimination, respect de la vie privée",
+    infoTooltip: "L'AI Act (règlement européen sur l'intelligence artificielle) est en vigueur. Ses critères principaux :\n- Transparence : informations claires sur le fonctionnement\n- Sécurité : protection des données et contre les cyberattaques\n- Responsabilité : mécanismes de correction des erreurs ou biais\n- Éthique : absence de discrimination, respect de la vie privée",
     infoSources: ["https://artificialintelligenceact.eu/fr/"],
     pathways: ["personal", "professional", "students"]
   },
@@ -153,16 +152,16 @@ export const decisionTreeData: Step[] = [
     isAction: true,
     pathways: ["personal", "professional", "students"]
   },
-  {
+    {
     id: "6.1",
     dimension: "utility",
-    question: "L'outil produit-il des résultats fiables et vérifiables ? (sources citées, taux d'hallucination connu, possibilité de fact-checking)",
+    question: "L'outil produit-il des résultats fiables et vérifiables ?",
     choices: [
-      { text: "Oui, les résultats sont fiables et/ou vérifiables", nextStep: "7", complianceLevel: "compliant" },
-      { text: "Les résultats nécessitent une vérification systématique", nextStep: "7", complianceLevel: "partial", warning: "Fiabilité limitée — vérification systématique nécessaire" },
-      { text: "Non, les résultats sont souvent erronés ou invérifiables", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Fiabilité insuffisante — risque d'hallucinations" }
+      { text: "Oui : l'outil cite ses sources et/ou propose des mécanismes de vérification", nextStep: "7", complianceLevel: "compliant" },
+      { text: "Partiellement : les résultats semblent corrects mais ne sont pas sourcés ni vérifiables automatiquement", nextStep: "7", complianceLevel: "partial", warning: "Fiabilité partielle — vérification manuelle nécessaire" },
+      { text: "Non : les résultats sont souvent erronés ou invérifiables", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Fiabilité insuffisante" }
     ],
-    infoTooltip: "Les IA génératives peuvent produire des 'hallucinations' : des informations présentées avec assurance mais factuellement fausses. En contexte éducatif, c'est le risque n°1. Vérifiez si l'outil cite ses sources, signale son niveau d'incertitude, ou propose des mécanismes de vérification.",
+    infoTooltip: "Les IA génératives peuvent produire des « hallucinations » : des informations présentées avec assurance mais factuellement fausses. C'est l'un des principaux risques en contexte éducatif. Vérifiez si l'outil cite ses sources, signale son niveau d'incertitude, ou propose des mécanismes de vérification.",
     pathways: ["personal", "professional", "students"]
   },
 
