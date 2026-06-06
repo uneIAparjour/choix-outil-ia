@@ -8,9 +8,11 @@ import {
   ComparisonResult,
   DimensionComparison,
 } from "@/lib/comparison";
+import { Link } from "react-router-dom";
 import {
   Upload,
   ArrowLeftRight,
+  ArrowLeft,
   Shield,
   Target,
   MousePointer,
@@ -145,6 +147,13 @@ const ComparisonView: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4">
       <div className="text-center mb-10">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm text-[#005E6E] hover:underline mb-6"
+        >
+          <ArrowLeft size={16} />
+          Retour à l'évaluation
+        </Link>
         <h1 className="text-3xl font-bold text-[#005E6E] mb-2">
           Comparer deux outils
         </h1>
