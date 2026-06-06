@@ -2,10 +2,10 @@ import React from "react";
 import { Step, Choice, ComplianceLevel } from "@/types/evaluation";
 import { ChevronDown, ChevronUp, Info, Trophy, Search, Check, AlertTriangle, X, ExternalLink } from "lucide-react";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface StepCardProps {
   step: Step;
@@ -26,16 +26,6 @@ function getOutcomeIcon(level: ComplianceLevel) {
     case "non-compliant":
       return <X className="w-5 h-5 text-red-500" />;
   }
-}
-
-function getChoiceStyle(choice: Choice): string {
-  if (choice.isEliminating) {
-    return "bg-red-50 hover:bg-red-100 text-red-800 border border-red-200";
-  }
-  if (choice.complianceLevel === "partial") {
-    return "bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200";
-  }
-  return "bg-[#005E6E] hover:bg-[#005E6E]/80 text-white";
 }
 
 function getDimensionBadge(dimension: string): { label: string; color: string } {
@@ -114,14 +104,14 @@ const StepCard: React.FC<StepCardProps> = ({
               </h3>
             </div>
             {step.infoTooltip && (
-              <Tooltip>
-                <TooltipTrigger asChild>
+              <Popover>
+                <PopoverTrigger asChild>
                   <button className="mt-1 p-1 rounded-full hover:bg-[#005E6E]/20 text-[#005E6E] transition-colors flex-shrink-0">
                     <Info size={16} />
                   </button>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="max-w-sm p-4 text-sm bg-white/95 border border-gray-200 shadow-lg leading-relaxed"
+                </PopoverTrigger>
+                <PopoverContent
+                  className="max-w-sm p-4 text-sm bg-white border border-gray-200 shadow-lg leading-relaxed"
                   side="top"
                   sideOffset={5}
                   align="center"
@@ -148,8 +138,8 @@ const StepCard: React.FC<StepCardProps> = ({
                       ))}
                     </div>
                   )}
-                </TooltipContent>
-              </Tooltip>
+                </PopoverContent>
+              </Popover>
             )}
           </div>
           {!isLastStep && (
@@ -165,7 +155,7 @@ const StepCard: React.FC<StepCardProps> = ({
               {step.choices.map((choice, idx) => (
                 <button
                   key={idx}
-                  className={`w-full px-6 py-3 rounded-lg text-left transition-all duration-200 font-medium text-center ${getChoiceStyle(choice)}`}
+                  className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 font-medium text-center bg-[#005E6E] hover:bg-[#005E6E]/80 text-white"
                   onClick={(e) => {
                     e.stopPropagation();
                     onChoice(choice);
