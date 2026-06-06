@@ -39,16 +39,21 @@ const DecisionTree: React.FC = () => {
     return decisionTreeData.find((s) => s.id === id);
   };
 
-  const getVisibleSteps = (): Step[] => {
-    if (!pathway) return [];
-    return decisionTreeData.filter((s) => s.pathways.includes(pathway));
-  };
-
   const scrollToStep = (stepId: string) => {
     setTimeout(() => {
       const el = document.getElementById(`step-${stepId}`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
+  };
+
+  const resolveNextStep = (stepId: string, choiceNextStep: string): string => {
+    if (pathway === "personal" && choiceNextStep === "11") {
+      return "success";
+    }
+    if (pathway === "professional" && choiceNextStep === "13") {
+      return "success";
+    }
+    return choiceNextStep;
   };
 
   const startPathway = (selected: Pathway) => {
@@ -75,7 +80,7 @@ const DecisionTree: React.FC = () => {
       });
     }
 
-    const nextStep = choice.nextStep;
+    const nextStep = resolveNextStep(step.id, choice.nextStep);
 
     if (nextStep === "export") {
       const passed = currentPath.includes("success");
@@ -96,14 +101,14 @@ const DecisionTree: React.FC = () => {
       return;
     }
 
-    if (nextStep === "success" || nextStep === "reject" || nextStep === "final-reject" || nextStep === "reconsider") {
+    if (["success", "reject", "final-reject", "reconsider"].includes(nextStep)) {
       const stepData = getStep(nextStep);
       if (stepData) {
         const newPath = [...currentPath, nextStep];
         setCurrentPath(newPath);
         setExpandedSteps(new Set([nextStep]));
 
-        if (nextStep === "success" || nextStep === "reject" || nextStep === "final-reject") {
+        if (["success", "reject", "final-reject"].includes(nextStep)) {
           const passed = nextStep === "success";
           const evalExport = buildEvaluationExport(
             toolInfo,
@@ -122,23 +127,6 @@ const DecisionTree: React.FC = () => {
 
     const nextStepData = getStep(nextStep);
     if (!nextStepData) return;
-
-    if (nextStepData.pathways && pathway && !nextStepData.pathways.includes(pathway)) {
-      const visibleSteps = getVisibleSteps();
-      const currentIndex = visibleSteps.findIndex((s) => s.id === nextStep);
-      if (currentIndex >= 0) {
-        const nextVisible = visibleSteps.slice(currentIndex + 1).find((s) =>
-          s.pathways.includes(pathway)
-        );
-        if (nextVisible) {
-          const newPath = [...currentPath, nextVisible.id];
-          setCurrentPath(newPath);
-          setExpandedSteps(new Set([nextVisible.id]));
-          scrollToStep(nextVisible.id);
-          return;
-        }
-      }
-    }
 
     const newPath = [...currentPath, nextStep];
     setCurrentPath(newPath);
@@ -228,7 +216,6 @@ const DecisionTree: React.FC = () => {
               {currentPath.map((stepId, index) => {
                 const step = getStep(stepId);
                 if (!step) return null;
-                if (pathway && !step.pathways.includes(pathway)) return null;
 
                 const isLast = index === currentPath.length - 1;
                 const isExpanded = expandedSteps.has(stepId);
@@ -255,7 +242,7 @@ const DecisionTree: React.FC = () => {
         </>
       )}
 
-            <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
+      <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
         <p className="mb-2 text-sm text-[#6B7280]">
           Version 2 — Inspiré en partie par le modèle d'évaluation de{" "}
           <a
