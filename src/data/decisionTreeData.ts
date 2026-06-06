@@ -90,7 +90,7 @@ export const decisionTreeData: Step[] = [
     infoSources: ["https://www.cnil.fr/fr/la-cnil-publie-une-faq-sur-les-transferts-de-donnees-vers-les-etats-unis"],
     pathways: ["personal", "professional", "students"]
   },
-    {
+  {
     id: "4",
     dimension: "compliance",
     question: "L'entreprise qui propose l'application fait-elle mention de sa conformité à l'AI Act ?",
@@ -152,7 +152,7 @@ export const decisionTreeData: Step[] = [
     isAction: true,
     pathways: ["personal", "professional", "students"]
   },
-    {
+  {
     id: "6.1",
     dimension: "utility",
     question: "L'outil produit-il des résultats fiables et vérifiables ?",
@@ -254,6 +254,10 @@ export const decisionTreeData: Step[] = [
     infoTooltip: "Les modèles d'IA peuvent reproduire ou amplifier des biais présents dans leurs données d'entraînement (genre, origine, culture…). En contexte éducatif, des biais non identifiés peuvent transmettre des stéréotypes aux élèves.",
     pathways: ["personal", "professional", "students"]
   },
+
+  // ═══════════════════════════════════════════
+  // VALEURS (professionnel + élèves uniquement)
+  // ═══════════════════════════════════════════
   {
     id: "11",
     dimension: "acceptability",
@@ -278,20 +282,19 @@ export const decisionTreeData: Step[] = [
   },
 
   // ═══════════════════════════════════════════
-  // BRANCHE PÉDAGOGIQUE (parcours "students" uniquement)
+  // BRANCHE PÉDAGOGIQUE (élèves uniquement)
   // ═══════════════════════════════════════════
   {
     id: "13",
     dimension: "acceptability",
-    question: "Je souhaite utiliser cet outil dans un cadre pédagogique avec des élèves ?",
+    question: "Je souhaite utiliser cet outil dans un cadre pédagogique avec des élèves à partir de la 4ème, comme indiqué dans le cadre d'usage de l'IA en éducation ?",
     choices: [
       { text: "Oui, avec des élèves à partir de la 4ème", nextStep: "14", complianceLevel: "compliant" },
-      { text: "Les élèves ne sont pas encore en 4ème", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Usage d'IA générative interdit avant la 4ème" },
-      { text: "Non, usage professionnel uniquement", nextStep: "success", complianceLevel: "compliant" }
+      { text: "Les élèves ne sont pas encore en 4ème", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Usage d'IA générative interdit avant la 4ème" }
     ],
     infoTooltip: "Le cadre d'usage de l'IA en éducation prévoit l'utilisation d'outils d'IA générative à partir de la 4ème.",
     infoSources: ["https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647e"],
-    pathways: ["professional", "students"]
+    pathways: ["students"]
   },
   {
     id: "14",
