@@ -1,385 +1,305 @@
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronDown, ChevronUp, Info, Trophy, Search, RotateCcw, Check, X } from "lucide-react";
+import { RotateCcw } from "lucide-react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { decisionTreeData } from "@/data/decisionTreeData";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-interface Step {
-  id: string;
-  question: string;
-  choices: {
-    text: string;
-    nextStep: string;
-  }[];
-  infoTooltip?: string;
-  isAction?: boolean;
-}
-
-interface StepOutcome {
-  stepId: string;
-  choiceText: string;
-  isPositive: boolean;
-}
+  Pathway,
+  ToolInfo,
+  Choice,
+  Step,
+  CriterionResponse,
+  HistoryEntry,
+  EvaluationExport,
+} from "@/types/evaluation";
+import {
+  buildCriterionResponse,
+  buildHistoryEntry,
+  buildEvaluationExport,
+  downloadJSON,
+} from "@/lib/scoring";
+import PathwaySelector from "./PathwaySelector";
+import ToolInfoForm from "./ToolInfoForm";
+import StepCard from "./StepCard";
+import ResultSummary from "./ResultSummary";
 
 const DecisionTree: React.FC = () => {
-  const [currentPath, setCurrentPath] = useState<string[]>(["1"]);
-  const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set(["1"]));
-  const [stepOutcomes, setStepOutcomes] = useState<StepOutcome[]>([]);
+  const [pathway, setPathway] = useState<Pathway | null>(null);
+  const [toolInfo, setToolInfo] = useState<ToolInfo>({ name: "", url: "", editor: "" });
+  const [currentPath, setCurrentPath] = useState<string[]>([]);
+  const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
+  const [criteriaByDimension, setCriteriaByDimension] = useState<Record<string, CriterionResponse[]>>({});
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [choiceByStep, setChoiceByStep] = useState<Record<string, Choice>>({});
+  const [evaluation, setEvaluation] = useState<EvaluationExport | null>(null);
   const treeRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const getCurrentStep = (): Step | undefined => {
-    const currentStepId = currentPath[currentPath.length - 1];
-    return decisionTreeData.find((step) => step.id === currentStepId);
+  const getStep = (id: string): Step | undefined => {
+    return decisionTreeData.find((s) => s.id === id);
   };
 
-  const isPositiveChoice = (stepId: string, choiceText: string): boolean => {
-    // Default rules
-    if (choiceText.startsWith("Oui") || choiceText.startsWith("Je ne sais pas") || choiceText.startsWith("J'ai suivi cette étape")) {
-      // Special case exceptions
-      if (stepId === "3.2" && choiceText === "Je ne sais toujours pas") {
-        return false;
-      } else if (stepId === "8" && choiceText === "Je ne sais pas") {
-        return false;
-      } else if (stepId === "8.1" && choiceText === "Je ne sais toujours pas") {
-        return false;
-      } else if (stepId === "12" && choiceText === "Non") {
-        return false;
-      } else {
-        return true;
-      }
-    } else if (stepId === "1" && choiceText === "Je commence l'analyse de l'application") {
-      return true;
-    } else if (stepId === "18" && choiceText === "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant") {
-      return true;
-    } else if (stepId === "18" && choiceText === "J'ai cherché et n'ai pas trouvé d'autre outil d'IA générative qui me semble intéressant") {
-      return false;
-    } else if (stepId === "4" && (choiceText === "Non, vérification effectuée avant le 02/08/2025")) {
-      return true;
-    } else if (stepId === "6.1" && choiceText === "J'ai trouvé / reçu des informations claires") {
-      return true;
-    } else if (stepId === "8" && choiceText === "Non") {
-      return true;
-    } else if (stepId === "8.1" && choiceText === "L'application n'utilise pas de main-d'œuvre peu payée voire exploitée pour l'entraînement ou le fonctionnement de l'IA") {
-      return true;
-    } else if (stepId === "12" && choiceText === "Je l'utiliserai seule / seul") {
-      return true;
-    } else if (stepId === "17" && choiceText.startsWith("Bravo ! Vous avez trouvé l'outil qui vous convient")) {
-      return true;
-    } else if (stepId === "16" && choiceText === "Oui (Mes valeurs personnelles, mes valeurs professionnelles et mon cadre d'utilisation me permettent de laisser de côté un critère de choix)") {
-      return true;
-    } else if (stepId === "16" && choiceText === "Non (Mes valeurs personnelles, mes valeurs professionnelles et mon cadre d'utilisation ne me permettent pas de laisser de côté un ou plusieurs critères de choix)") {
-      return false;
-    } else if (stepId === "13.1" && choiceText === "Les élèves ne sont pas encore en 4ème") {
-      return false;
-    } else if (stepId === "13.2" && choiceText === "Je cherche un autre outil d'IA générative") {
-      return false;
-    } else {
-      return false;
+  const getVisibleSteps = (): Step[] => {
+    if (!pathway) return [];
+    return decisionTreeData.filter((s) => s.pathways.includes(pathway));
+  };
+
+  const scrollToStep = (stepId: string) => {
+    setTimeout(() => {
+      const el = document.getElementById(`step-${stepId}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  };
+
+  const startPathway = (selected: Pathway) => {
+    setPathway(selected);
+    const firstStep = "1";
+    setCurrentPath([firstStep]);
+    setExpandedSteps(new Set([firstStep]));
+    scrollToStep(firstStep);
+  };
+
+  const handleChoice = (step: Step, choice: Choice) => {
+    const historyEntry = buildHistoryEntry(step, choice);
+    setHistory((prev) => [...prev, historyEntry]);
+
+    setChoiceByStep((prev) => ({ ...prev, [step.id]: choice }));
+
+    const criterion = buildCriterionResponse(step, choice);
+    if (criterion) {
+      setCriteriaByDimension((prev) => {
+        const dim = step.dimension;
+        const existing = prev[dim] || [];
+        const filtered = existing.filter((c) => c.id !== criterion.id);
+        return { ...prev, [dim]: [...filtered, criterion] };
+      });
     }
-  };
 
-  const handleChoice = (nextStep: string, choiceText: string) => {
-    const currentStep = getCurrentStep();
-    
-    if (currentStep) {
-      // Record outcome for this step
-      setStepOutcomes(prev => [
-        ...prev,
-        {
-          stepId: currentStep.id,
-          choiceText,
-          isPositive: isPositiveChoice(currentStep.id, choiceText)
+    const nextStep = choice.nextStep;
+
+    if (nextStep === "export") {
+      const passed = currentPath.includes("success");
+      const evalExport = buildEvaluationExport(
+        toolInfo,
+        pathway!,
+        criteriaByDimension,
+        history,
+        passed
+      );
+      setEvaluation(evalExport);
+      downloadJSON(evalExport);
+      return;
+    }
+
+    if (nextStep === "0") {
+      resetTree();
+      return;
+    }
+
+    if (nextStep === "success" || nextStep === "reject" || nextStep === "final-reject" || nextStep === "reconsider") {
+      const stepData = getStep(nextStep);
+      if (stepData) {
+        const newPath = [...currentPath, nextStep];
+        setCurrentPath(newPath);
+        setExpandedSteps(new Set([nextStep]));
+
+        if (nextStep === "success" || nextStep === "reject" || nextStep === "final-reject") {
+          const passed = nextStep === "success";
+          const evalExport = buildEvaluationExport(
+            toolInfo,
+            pathway!,
+            criteriaByDimension,
+            [...history, historyEntry],
+            passed
+          );
+          setEvaluation(evalExport);
         }
-      ]);
+
+        scrollToStep(nextStep);
+        return;
+      }
     }
 
-    // Check if we need to generate a summary sheet
-    const shouldShowSummary = 
-      (currentStep?.id === "18" && choiceText === "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant") ||
-      currentStep?.id === "16";
+    const nextStepData = getStep(nextStep);
+    if (!nextStepData) return;
 
-    if (nextStep.startsWith("Retour")) {
-      const stepMatch = nextStep.match(/Étape (\d+\.?\d*)/);
-      if (stepMatch && stepMatch[1]) {
-        const targetStep = stepMatch[1];
-        
-        const foundStep = decisionTreeData.find(
-          (step) => step.id === targetStep
+    if (nextStepData.pathways && pathway && !nextStepData.pathways.includes(pathway)) {
+      const visibleSteps = getVisibleSteps();
+      const currentIndex = visibleSteps.findIndex((s) => s.id === nextStep);
+      if (currentIndex >= 0) {
+        const nextVisible = visibleSteps.slice(currentIndex + 1).find((s) =>
+          s.pathways.includes(pathway)
         );
-        
-        if (foundStep) {
-          setExpandedSteps(new Set([foundStep.id]));
-          setCurrentPath([foundStep.id]);
-          setTimeout(() => scrollToLatestStep(), 100);
+        if (nextVisible) {
+          const newPath = [...currentPath, nextVisible.id];
+          setCurrentPath(newPath);
+          setExpandedSteps(new Set([nextVisible.id]));
+          scrollToStep(nextVisible.id);
           return;
         }
       }
     }
 
-    const nextStepData = decisionTreeData.find((step) => step.id === nextStep);
-    if (nextStepData && (nextStep === "17" || nextStep === "19")) {
-      const newExpandedSteps = new Set<string>();
-      newExpandedSteps.add(nextStep);
-      setExpandedSteps(newExpandedSteps);
-      
-      setCurrentPath([...currentPath, nextStep]);
-      
-      setTimeout(() => scrollToLatestStep(), 100);
-      return;
-    }
-
-    if (nextStep === "1" && (currentPath.includes("17") || currentPath.includes("19"))) {
-      resetTree();
-      return;
-    }
-
-    setCurrentPath([...currentPath, nextStep]);
-    
-    const newExpandedSteps = new Set<string>();
-    newExpandedSteps.add(nextStep);
-    setExpandedSteps(newExpandedSteps);
-    
-    setTimeout(() => scrollToLatestStep(), 100);
+    const newPath = [...currentPath, nextStep];
+    setCurrentPath(newPath);
+    setExpandedSteps(new Set([nextStep]));
+    scrollToStep(nextStep);
   };
 
   const jumpToStep = (index: number) => {
     if (index >= currentPath.length - 1) return;
-    
     const targetStepId = currentPath[index];
-    
     const newPath = currentPath.slice(0, index + 1);
     setCurrentPath(newPath);
-    
-    // Adjust step outcomes as well
-    setStepOutcomes(prev => prev.slice(0, index));
-    
-    const newExpandedSteps = new Set<string>();
-    newExpandedSteps.add(targetStepId);
-    setExpandedSteps(newExpandedSteps);
-    
-    setTimeout(() => {
-      const targetStep = document.getElementById(`step-${targetStepId}`);
-      if (targetStep) {
-        targetStep.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 100);
-  };
+    setExpandedSteps(new Set([targetStepId]));
+    setEvaluation(null);
 
-  const scrollToLatestStep = () => {
-    const latestStep = document.getElementById(`step-${currentPath[currentPath.length - 1]}`);
-    if (latestStep) {
-      latestStep.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    const removedSteps = currentPath.slice(index + 1);
+    setHistory((prev) =>
+      prev.filter((h) => !removedSteps.includes(h.stepId))
+    );
+
+    const newChoices = { ...choiceByStep };
+    removedSteps.forEach((id) => delete newChoices[id]);
+    setChoiceByStep(newChoices);
+
+    const newCriteria = { ...criteriaByDimension };
+    Object.keys(newCriteria).forEach((dim) => {
+      newCriteria[dim] = newCriteria[dim].filter(
+        (c) => !removedSteps.includes(c.id)
+      );
+    });
+    setCriteriaByDimension(newCriteria);
+
+    scrollToStep(targetStepId);
   };
 
   const resetTree = () => {
-    setCurrentPath(["1"]);
-    setExpandedSteps(new Set(["1"]));
-    setStepOutcomes([]);
-    
+    setPathway(null);
+    setCurrentPath([]);
+    setExpandedSteps(new Set());
+    setCriteriaByDimension({});
+    setHistory([]);
+    setChoiceByStep({});
+    setEvaluation(null);
+    setToolInfo({ name: "", url: "", editor: "" });
+
     toast({
-      title: "Arbre de décision réinitialisé",
-      description: "Vous pouvez recommencer votre parcours",
+      title: "Évaluation réinitialisée",
+      description: "Vous pouvez recommencer avec un nouvel outil",
     });
-    
-    setTimeout(() => scrollToLatestStep(), 100);
   };
 
-  const getStepOutcome = (stepId: string): boolean | undefined => {
-    const outcome = stepOutcomes.find(o => o.stepId === stepId);
-    return outcome ? outcome.isPositive : undefined;
-  };
-
-  const renderPathSummary = () => {
-    const lastStepId = currentPath[currentPath.length - 1];
-    const hasReachedConclusion = ["17", "19"].includes(lastStepId);
-    const shouldShowInterimSummary = stepOutcomes.some(
-      outcome => 
-        (outcome.stepId === "18" && outcome.choiceText === "J'ai cherché et j'ai trouvé un autre outil d'IA générative qui me semble intéressant") ||
-        outcome.stepId === "16"
-    );
-
-    if (!hasReachedConclusion && !shouldShowInterimSummary) {
-      return null;
-    }
-
-    const allSteps = decisionTreeData.filter(step => !step.isAction);
-    const visitedStepsMap = new Map(stepOutcomes.map(o => [o.stepId, o.isPositive]));
-
-    return (
-      <div className="mt-12 p-6 bg-[#F8F8FA] rounded-xl border border-[#E5E7EB] animate-fade-in">
-        <h3 className="text-lg font-semibold text-[#005E6E] mb-4">
-          {shouldShowInterimSummary && !hasReachedConclusion 
-            ? "Feuille bilan de votre parcours" 
-            : "Résumé de votre parcours"}
-        </h3>
-        <div className="space-y-3">
-          {allSteps.map(step => {
-            const isVisited = visitedStepsMap.has(step.id);
-            const isPositive = visitedStepsMap.get(step.id);
-            const outcome = stepOutcomes.find(o => o.stepId === step.id);
-            
-            if (!isVisited) return null;
-            
-            return (
-              <div key={step.id} className="flex items-start gap-3">
-                {isPositive ? (
-                  <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                ) : (
-                  <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-                )}
-                <div className="flex-1">
-                  <p className="text-sm text-gray-700">{step.question}</p>
-                  {outcome && (
-                    <p className="text-sm text-[#005E6E] font-medium mt-1">→ {outcome.choiceText}</p>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
+  const isConclusion = (stepId: string) =>
+    ["success", "reject", "final-reject"].includes(stepId);
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 min-h-screen bg-white font-marianne" ref={treeRef}>
-      <div className="flex flex-col items-center justify-center mb-16 text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#005E6E] leading-tight mb-6">
-          Aide au choix d'une application<br/>utilisant l'IA générative
+      <div className="flex flex-col items-center justify-center mb-12 text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#005E6E] leading-tight mb-4">
+          Aide au choix d'une application
+          <br />
+          utilisant l'IA générative
         </h1>
-        <div className="w-20 h-1 bg-[#005E6E] rounded-full mb-6"></div>
-        <button
-          onClick={resetTree}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#EEF1FF] hover:bg-[#E2E7FF] text-[#005E6E] transition-colors shadow-sm"
-          title="Réinitialiser le parcours"
-        >
-          <RotateCcw size={18} />
-          <span className="text-sm font-medium">Recommencer</span>
-        </button>
+        <div className="w-20 h-1 bg-[#005E6E] rounded-full mb-4" />
+        <p className="text-sm text-gray-500 mb-6 max-w-lg">
+          Évaluez méthodiquement un outil d'IA selon 4 dimensions : conformité,
+          utilité, utilisabilité et acceptabilité.
+        </p>
+        {pathway && (
+          <button
+            onClick={resetTree}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#EEF1FF] hover:bg-[#E2E7FF] text-[#005E6E] transition-colors shadow-sm"
+          >
+            <RotateCcw size={18} />
+            <span className="text-sm font-medium">Recommencer</span>
+          </button>
+        )}
       </div>
 
-      <TooltipProvider>
-        <div className="space-y-6">
-          {currentPath.map((stepId, index) => {
-            const step = decisionTreeData.find((s) => s.id === stepId);
-            if (!step) return null;
+      {!pathway ? (
+        <PathwaySelector onSelect={startPathway} />
+      ) : (
+        <>
+          <ToolInfoForm toolInfo={toolInfo} onChange={setToolInfo} />
 
-            const isExpanded = expandedSteps.has(stepId);
-            const isLastStep = index === currentPath.length - 1;
-            const isConclusion = stepId === "17" || stepId === "19";
-            const stepOutcome = getStepOutcome(stepId);
+          <TooltipProvider>
+            <div className="space-y-6">
+              {currentPath.map((stepId, index) => {
+                const step = getStep(stepId);
+                if (!step) return null;
+                if (pathway && !step.pathways.includes(pathway)) return null;
 
-            return (
-              <div
-                key={stepId}
-                id={`step-${stepId}`}
-                className={`rounded-xl border ${
-                  isLastStep 
-                    ? "border-[#005E6E] bg-[#F8F8FA] shadow-lg shadow-[#005E6E]/5" 
-                    : "border-[#E5E7EB] bg-[#F8F8FA]"
-                } ${
-                  isConclusion && stepId === "17" ? "bg-[#F0FDF4] border-[#4ADE80]" : ""
-                } transition-all duration-300 hover:shadow-md`}
-                onClick={() => {
-                  if (!isLastStep) {
-                    jumpToStep(index);
-                  }
-                }}
-              >
-                <div className="p-6">
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex items-start gap-2">
-                      {!isLastStep && stepOutcome !== undefined && (
-                        <div className="mt-1 flex-shrink-0">
-                          {stepOutcome ? (
-                            <Check className="w-5 h-5 text-green-500" />
-                          ) : (
-                            <X className="w-5 h-5 text-red-500" />
-                          )}
-                        </div>
-                      )}
-                      <h3 className="font-semibold text-[#2D3648] text-lg">
-                        {isConclusion ? (
-                          <span className="flex items-center gap-2">
-                            {stepId === "17" && <Trophy className="text-[#4ADE80]" size={24} />}
-                            {stepId === "19" && <Search className="text-[#2D3648]" size={24} />}
-                            {step.question}
-                          </span>
-                        ) : (
-                          <>{step.question}</>
-                        )}
-                      </h3>
-                      {step.infoTooltip && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button className="mt-1 p-1 rounded-full hover:bg-[#005E6E]/20 text-[#005E6E] transition-colors">
-                              <Info size={16} />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent 
-                            className="max-w-sm p-4 text-sm bg-white/95 border border-gray-200 shadow-lg leading-relaxed opacity-95" 
-                            side="top" 
-                            sideOffset={5}
-                            align="center"
-                          >
-                            <div dangerouslySetInnerHTML={{ 
-                              __html: step.infoTooltip.replace(/\n/g, '<br>') 
-                            }} />
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </div>
-                    {!isLastStep && (
-                      <button className="text-[#005E6E] p-1 hover:bg-[#005E6E]/20 rounded-full transition-colors">
-                        {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                      </button>
-                    )}
-                  </div>
-                  
-                  {(isExpanded || isLastStep) && (
-                    <div className="mt-6 animate-fade-in">
-                      {isLastStep && (
-                        <div className="flex flex-col gap-3 mt-4">
-                          {step.choices.map((choice, idx) => (
-                            <button
-                              key={idx}
-                              className="w-full px-6 py-3 rounded-lg text-left transition-all duration-200 bg-[#005E6E] hover:bg-[#005E6E]/80 text-white font-medium text-center"
-                              onClick={() => handleChoice(choice.nextStep, choice.text)}
-                            >
-                              {choice.text}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-          {renderPathSummary()}
-        </div>
-      </TooltipProvider>
+                const isLast = index === currentPath.length - 1;
+                const isExpanded = expandedSteps.has(stepId);
+                const selectedChoice = choiceByStep[stepId];
+                const outcomeLevel = selectedChoice?.complianceLevel;
+
+                return (
+                  <StepCard
+                    key={`${stepId}-${index}`}
+                    step={step}
+                    isExpanded={isExpanded}
+                    isLastStep={isLast}
+                    isConclusion={isConclusion(stepId)}
+                    outcomeLevel={outcomeLevel}
+                    onChoice={(choice) => handleChoice(step, choice)}
+                    onJumpBack={() => jumpToStep(index)}
+                  />
+                );
+              })}
+            </div>
+          </TooltipProvider>
+
+          {evaluation && <ResultSummary evaluation={evaluation} />}
+        </>
+      )}
 
       <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
-        <p className="mb-4 text-sm text-[#6B7280]">
-          Réalisé avec <a href="https://www.uneiaparjour.fr/lovable/" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">Lovable.dev</a> par <a href="https://www.uneiaparjour.fr" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">uneIAparjour.fr</a>.
+        <p className="mb-2 text-sm text-[#6B7280]">
+          Basé sur le modèle d'évaluation de{" "}
+          <a
+            href="https://edutice.hal.science/edutice-00000154"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#005E6E] hover:underline"
+          >
+            Tricot et al. (2003)
+          </a>{" "}
+          — Utilité, Utilisabilité, Acceptabilité.
         </p>
-        
-        <div className="text-sm text-[#6B7280]">
-          <p className="mb-2">
-            Mise à disposition sous <a href="https://creativecommons.org/licenses/by/4.0/deed.fr" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">license Creative commons CC BY</a>.
-          </p>
-          <p className="mb-2">Github : <a href="https://github.com/uneIAparjour/choix-outil-ia" target="_blank" rel="noopener noreferrer" className="text-[#005E6E] hover:underline">https://github.com/uneIAparjour/choix-outil-ia</a></p>
-          <p>Dernière mise à jour : juillet 2025</p>
-        </div>
+        <p className="mb-2 text-sm text-[#6B7280]">
+          Réalisé par{" "}
+          <a
+            href="https://www.uneiaparjour.fr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#005E6E] hover:underline"
+          >
+            uneIAparjour.fr
+          </a>
+          . Mis à disposition sous{" "}
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/deed.fr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#005E6E] hover:underline"
+          >
+            licence CC BY
+          </a>
+          .
+        </p>
+        <p className="text-sm text-[#6B7280]">
+          <a
+            href="https://github.com/uneIAparjour/choix-outil-ia"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#005E6E] hover:underline"
+          >
+            Code source
+          </a>{" "}
+          — Dernière mise à jour : juillet 2025
+        </p>
       </footer>
     </div>
   );
