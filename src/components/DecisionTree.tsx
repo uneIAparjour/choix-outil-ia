@@ -255,9 +255,9 @@ const DecisionTree: React.FC = () => {
         </>
       )}
 
-      <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
+            <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
         <p className="mb-2 text-sm text-[#6B7280]">
-          Basé sur le modèle d'évaluation de{" "}
+          Version 2 — Inspiré en partie par le modèle d'évaluation de{" "}
           <a
             href="https://edutice.hal.science/edutice-00000154"
             target="_blank"
@@ -267,6 +267,17 @@ const DecisionTree: React.FC = () => {
             Tricot et al. (2003)
           </a>{" "}
           — Utilité, Utilisabilité, Acceptabilité.
+        </p>
+        <p className="mb-2 text-sm text-[#6B7280]">
+          <a
+            href="https://www.uneiaparjour.fr/aide-au-choix-doutils/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#005E6E] hover:underline"
+          >
+            Version 1
+          </a>
+          {" "}disponible sur uneIAparjour.fr.
         </p>
         <p className="mb-2 text-sm text-[#6B7280]">
           Réalisé par{" "}
@@ -297,8 +308,8 @@ const DecisionTree: React.FC = () => {
             className="text-[#005E6E] hover:underline"
           >
             Code source
-          </a>{" "}
-          — Dernière mise à jour : juillet 2025
+          </a>
+          {" "}— Dernière mise à jour : juin 2026
         </p>
       </footer>
     </div>
