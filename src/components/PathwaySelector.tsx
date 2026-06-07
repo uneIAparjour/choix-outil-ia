@@ -20,7 +20,7 @@ const pathways = [
     id: "professional" as Pathway,
     icon: Briefcase,
     title: "Usage professionnel",
-    description: "Préparation de cours, correction, génération de supports",
+    description: "Productivité, rédaction, analyse, préparation de supports…",
     detail: "Parcours intermédiaire — RGPD souhaitable, pas de branche pédagogique élèves.",
     color: "bg-emerald-50 border-emerald-200 hover:border-emerald-400",
     iconColor: "text-emerald-600",
