@@ -32,25 +32,15 @@ const DIMENSION_CONFIG: Record<
   acceptability: { icon: CheckCircle, label: "Acceptabilité", color: "text-purple-700" },
 };
 
-function ScoreBar({ score, maxScore, color }: { score: number; maxScore: number; color: string }) {
-  const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
-  return (
-    <div className="flex items-center gap-2">
-      <div className="flex-1 bg-gray-200 rounded-full h-2">
-        <div className={`h-2 rounded-full ${color} transition-all duration-500`} style={{ width: `${pct}%` }} />
-      </div>
-      <span className="text-sm font-semibold text-gray-700 w-16 text-right">{score}/{maxScore}</span>
-    </div>
-  );
-}
-
 function DimensionRow({ dimKey, dim }: { dimKey: string; dim: DimensionComparison }) {
   const [expanded, setExpanded] = useState(false);
   const config = DIMENSION_CONFIG[dimKey];
   if (!config) return null;
   const Icon = config.icon;
-  const winnerA = dim.scoreA > dim.scoreB;
-  const winnerB = dim.scoreB > dim.scoreA;
+  const pctA = dim.maxScoreA > 0 ? dim.scoreA / dim.maxScoreA : 0;
+  const pctB = dim.maxScoreB > 0 ? dim.scoreB / dim.maxScoreB : 0;
+  const winnerA = pctA > pctB;
+  const winnerB = pctB > pctA;
 
   return (
     <div className="border border-[#E5E7EB] rounded-lg overflow-hidden">
@@ -62,12 +52,12 @@ function DimensionRow({ dimKey, dim }: { dimKey: string; dim: DimensionCompariso
         <span className={`font-semibold text-sm ${config.color} flex-1`}>{config.label}</span>
         <div className="flex items-center gap-6">
           <span className={`text-sm font-bold ${winnerA ? "text-green-600" : "text-gray-600"}`}>
-            {dim.scoreA}/{dim.maxScore}
+            {dim.scoreA}/{dim.maxScoreA}
             {winnerA && " ★"}
           </span>
           <span className="text-gray-300">vs</span>
           <span className={`text-sm font-bold ${winnerB ? "text-green-600" : "text-gray-600"}`}>
-            {dim.scoreB}/{dim.maxScore}
+            {dim.scoreB}/{dim.maxScoreB}
             {winnerB && " ★"}
           </span>
         </div>
@@ -265,6 +255,14 @@ const ComparisonView: React.FC = () => {
       {/* Résultat de la comparaison */}
       {comparison && (
         <div className="animate-fade-in">
+          {/* Avertissement parcours différents */}
+          {!comparison.samePathway && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm flex items-center gap-2">
+              <AlertTriangle size={16} />
+              Les deux outils ont été évalués sur des parcours différents ({comparison.pathwayA} vs {comparison.pathwayB}). Les scores maximaux diffèrent — les pourcentages sont utilisés pour comparer.
+            </div>
+          )}
+
           {/* Score global */}
           <div className="bg-white border border-[#E5E7EB] rounded-xl overflow-hidden shadow-sm mb-6">
             <div className="bg-[#005E6E] text-white p-4 flex items-center justify-center gap-3">
@@ -277,10 +275,14 @@ const ComparisonView: React.FC = () => {
                 <div>
                   <p className="font-bold text-lg text-gray-800">{comparison.toolA}</p>
                   <p className="text-xs text-gray-400">{comparison.pathwayA}</p>
-                  <p className={`text-3xl font-bold mt-2 ${comparison.totalScoreA >= comparison.totalScoreB ? "text-green-600" : "text-gray-500"}`}>
+                  <p className={`text-3xl font-bold mt-2 ${
+                    (comparison.maxScoreA > 0 ? comparison.totalScoreA / comparison.maxScoreA : 0) >=
+                    (comparison.maxScoreB > 0 ? comparison.totalScoreB / comparison.maxScoreB : 0)
+                      ? "text-green-600" : "text-gray-500"
+                  }`}>
                     {comparison.totalScoreA}
                   </p>
-                  <p className="text-xs text-gray-400">/ {comparison.maxScore}</p>
+                  <p className="text-xs text-gray-400">/ {comparison.maxScoreA}</p>
                   <p className="text-xs mt-1">{comparison.passedA ? "✅ Validé" : "❌ Non validé"}</p>
                 </div>
                 <div className="flex items-center justify-center">
@@ -289,10 +291,14 @@ const ComparisonView: React.FC = () => {
                 <div>
                   <p className="font-bold text-lg text-gray-800">{comparison.toolB}</p>
                   <p className="text-xs text-gray-400">{comparison.pathwayB}</p>
-                  <p className={`text-3xl font-bold mt-2 ${comparison.totalScoreB >= comparison.totalScoreA ? "text-green-600" : "text-gray-500"}`}>
+                  <p className={`text-3xl font-bold mt-2 ${
+                    (comparison.maxScoreB > 0 ? comparison.totalScoreB / comparison.maxScoreB : 0) >=
+                    (comparison.maxScoreA > 0 ? comparison.totalScoreA / comparison.maxScoreA : 0)
+                      ? "text-green-600" : "text-gray-500"
+                  }`}>
                     {comparison.totalScoreB}
                   </p>
-                  <p className="text-xs text-gray-400">/ {comparison.maxScore}</p>
+                  <p className="text-xs text-gray-400">/ {comparison.maxScoreB}</p>
                   <p className="text-xs mt-1">{comparison.passedB ? "✅ Validé" : "❌ Non validé"}</p>
                 </div>
               </div>
@@ -340,7 +346,7 @@ const ComparisonView: React.FC = () => {
 
           {/* Avertissements */}
           {(comparison.warningsA.length > 0 || comparison.warningsB.length > 0) && (
-            <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <h4 className="text-xs font-semibold text-amber-700 mb-2 flex items-center gap-1">
                   <AlertTriangle size={12} />
