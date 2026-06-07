@@ -10,7 +10,7 @@ export const decisionTreeData: Step[] = [
     question: "Dans quel cadre souhaitez-vous utiliser cet outil ?",
     choices: [
       { text: "Usage personnel (curiosité, veille, productivité personnelle)", nextStep: "1", complianceLevel: "compliant" },
-      { text: "Usage professionnel enseignant (préparation de cours, correction, génération de supports)", nextStep: "1", complianceLevel: "compliant" },
+      { text: "Usage professionnel (productivité, rédaction, analyse, préparation de supports…)", nextStep: "1", complianceLevel: "compliant" },
       { text: "Usage avec des élèves (en classe, en autonomie, en travail collaboratif)", nextStep: "1", complianceLevel: "compliant" }
     ],
     pathways: ["personal", "professional", "students"]
