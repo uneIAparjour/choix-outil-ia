@@ -18,6 +18,31 @@ const DIMENSION_LABELS: Record<string, string> = {
   acceptability: "Acceptabilité",
 };
 
+// Score max par dimension et par parcours (nombre de critères sur le chemin optimal × 2)
+// Personnel : 2, 3, 3.3, 4, 4.1 | 5, 6, 6.1 | 7, 8 | 9, 10, 10.1
+// Professionnel : idem + 11, 12
+// Élèves : idem + 13, 14, 14.1, 15
+const PATHWAY_MAX_SCORES: Record<Pathway, Record<string, number>> = {
+  personal: {
+    compliance: 10, // 5 critères × 2
+    utility: 6,     // 3 critères × 2
+    usability: 4,   // 2 critères × 2
+    acceptability: 6, // 3 critères × 2
+  },
+  professional: {
+    compliance: 10,
+    utility: 6,
+    usability: 4,
+    acceptability: 10, // 5 critères × 2 (+ 11, 12)
+  },
+  students: {
+    compliance: 10,
+    utility: 10,    // 5 critères × 2 (+ 14, 14.1)
+    usability: 4,
+    acceptability: 14, // 7 critères × 2 (+ 11, 12, 13, 15)
+  },
+};
+
 function scoreFromLevel(level: ComplianceLevel): number {
   switch (level) {
     case "compliant":
@@ -31,9 +56,9 @@ function scoreFromLevel(level: ComplianceLevel): number {
 
 export function computeDimension(
   criteria: CriterionResponse[],
-  dimensionKey: string
+  dimensionKey: string,
+  pathwayMaxScore: number
 ): DimensionResult {
-  const maxScore = criteria.length * 2;
   const score = criteria.reduce(
     (sum, c) => sum + scoreFromLevel(c.response),
     0
@@ -41,7 +66,7 @@ export function computeDimension(
   return {
     label: DIMENSION_LABELS[dimensionKey] || dimensionKey,
     score,
-    maxScore,
+    maxScore: pathwayMaxScore,
     criteria,
   };
 }
@@ -84,22 +109,28 @@ export function buildEvaluationExport(
   history: HistoryEntry[],
   passed: boolean
 ): EvaluationExport {
+  const maxScores = PATHWAY_MAX_SCORES[pathway];
+
   const dimensions = {
     compliance: computeDimension(
       criteriaByDimension["compliance"] || [],
-      "compliance"
+      "compliance",
+      maxScores.compliance
     ),
     utility: computeDimension(
       criteriaByDimension["utility"] || [],
-      "utility"
+      "utility",
+      maxScores.utility
     ),
     usability: computeDimension(
       criteriaByDimension["usability"] || [],
-      "usability"
+      "usability",
+      maxScores.usability
     ),
     acceptability: computeDimension(
       criteriaByDimension["acceptability"] || [],
-      "acceptability"
+      "acceptability",
+      maxScores.acceptability
     ),
   };
 
