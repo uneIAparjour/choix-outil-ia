@@ -7,7 +7,7 @@
 | Parcours | Description | Fin du parcours |
 |----------|-------------|-----------------|
 | 🔵 Personnel | Curiosité, veille, productivité personnelle | Après l'étape [10.1] |
-| 🟢 Professionnel | Préparation de cours, correction, génération de supports | Après l'étape [12] |
+| 🟢 Professionnel | Productivité, rédaction, analyse, préparation de supports… | Après l'étape [12] |
 | 🟣 Élèves | En classe, en autonomie, en travail collaboratif | Après l'étape [15] |
 
 ## Système de notation
