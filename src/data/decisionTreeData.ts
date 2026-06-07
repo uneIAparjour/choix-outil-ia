@@ -90,16 +90,17 @@ export const decisionTreeData: Step[] = [
     infoSources: ["https://www.cnil.fr/fr/la-cnil-publie-une-faq-sur-les-transferts-de-donnees-vers-les-etats-unis"],
     pathways: ["personal", "professional", "students"]
   },
-  {
+    {
     id: "4",
     dimension: "compliance",
-    question: "L'entreprise qui propose l'application fait-elle mention de sa conformité à l'AI Act ?",
+    question: "L'application respecte-t-elle les obligations de transparence du règlement européen sur l'IA (AI Act) ?",
     choices: [
-      { text: "Oui (déclaration, certifications, audit)", nextStep: "4.1", complianceLevel: "compliant" },
-      { text: "Non, aucune mention de conformité à l'AI Act", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
+      { text: "Oui : l'outil informe clairement qu'il utilise l'IA et documente son fonctionnement", nextStep: "4.1", complianceLevel: "compliant" },
+      { text: "Partiellement : certaines informations sont disponibles mais incomplètes", nextStep: "4.1", complianceLevel: "partial", warning: "Conformité AI Act partielle — transparence incomplète" },
+      { text: "Non ou je ne sais pas", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
     ],
-    infoTooltip: "L'AI Act (règlement européen sur l'intelligence artificielle) est en vigueur. Ses critères principaux :\n- Transparence : informations claires sur le fonctionnement\n- Sécurité : protection des données et contre les cyberattaques\n- Responsabilité : mécanismes de correction des erreurs ou biais\n- Éthique : absence de discrimination, respect de la vie privée",
-    infoSources: ["https://artificialintelligenceact.eu/fr/"],
+    infoTooltip: "Le règlement européen sur l'IA (AI Act) impose des obligations de transparence :\n- Informer l'utilisateur qu'il interagit avec une IA\n- Marquer les contenus générés par IA comme tels\n- Documenter le fonctionnement du système (données d'entraînement, tests, limitations)\n- Évaluer et atténuer les risques, y compris les biais",
+    infoSources: ["https://artificialintelligenceact.eu/article/50/"],
     pathways: ["personal", "professional", "students"]
   },
   {
