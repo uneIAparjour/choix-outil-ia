@@ -20,7 +20,8 @@ export interface DimensionComparison {
   label: string;
   scoreA: number;
   scoreB: number;
-  maxScore: number;
+  maxScoreA: number;
+  maxScoreB: number;
   criteria: CriterionComparison[];
 }
 
@@ -29,6 +30,7 @@ export interface ComparisonResult {
   toolB: string;
   pathwayA: string;
   pathwayB: string;
+  samePathway: boolean;
   exportedAtA: string;
   exportedAtB: string;
   dimensions: {
@@ -39,7 +41,8 @@ export interface ComparisonResult {
   };
   totalScoreA: number;
   totalScoreB: number;
-  maxScore: number;
+  maxScoreA: number;
+  maxScoreB: number;
   passedA: boolean;
   passedB: boolean;
   strengthsA: string[];
@@ -99,20 +102,20 @@ function compareDimension(
     });
   });
 
-  const maxScore = Math.max(dimA.maxScore, dimB.maxScore);
-
   return {
     label: dimA.label || dimB.label,
     scoreA: dimA.score,
     scoreB: dimB.score,
-    maxScore,
+    maxScoreA: dimA.maxScore,
+    maxScoreB: dimB.maxScore,
     criteria,
   };
 }
 
 function findStrengths(
   eval_: EvaluationExport,
-  other: EvaluationExport
+  other: EvaluationExport,
+  samePathway: boolean
 ): string[] {
   const strengths: string[] = [];
   const dims = ["compliance", "utility", "usability", "acceptability"] as const;
@@ -120,8 +123,17 @@ function findStrengths(
   dims.forEach((key) => {
     const dim = eval_.dimensions[key];
     const otherDim = other.dimensions[key];
-    if (dim.score > otherDim.score) {
-      strengths.push(`${dim.label} (${dim.score}/${dim.maxScore} vs ${otherDim.score}/${otherDim.maxScore})`);
+
+    if (samePathway) {
+      if (dim.score > otherDim.score) {
+        strengths.push(`${dim.label} (${dim.score}/${dim.maxScore} vs ${otherDim.score}/${otherDim.maxScore})`);
+      }
+    } else {
+      const pct = dim.maxScore > 0 ? dim.score / dim.maxScore : 0;
+      const otherPct = otherDim.maxScore > 0 ? otherDim.score / otherDim.maxScore : 0;
+      if (pct > otherPct) {
+        strengths.push(`${dim.label} (${Math.round(pct * 100)}% vs ${Math.round(otherPct * 100)}%)`);
+      }
     }
   });
 
@@ -133,6 +145,7 @@ export function compareEvaluations(
   evalB: EvaluationExport
 ): ComparisonResult {
   const dims = ["compliance", "utility", "usability", "acceptability"] as const;
+  const samePathway = evalA.pathway === evalB.pathway;
 
   const dimensions = {} as ComparisonResult["dimensions"];
   dims.forEach((key) => {
@@ -144,16 +157,18 @@ export function compareEvaluations(
     toolB: evalB.tool.name || "Outil B",
     pathwayA: PATHWAY_LABELS[evalA.pathway] || evalA.pathway,
     pathwayB: PATHWAY_LABELS[evalB.pathway] || evalB.pathway,
+    samePathway,
     exportedAtA: evalA.exportedAt,
     exportedAtB: evalB.exportedAt,
     dimensions,
     totalScoreA: evalA.summary.totalScore,
     totalScoreB: evalB.summary.totalScore,
-    maxScore: evalA.summary.maxScore,
+    maxScoreA: evalA.summary.maxScore,
+    maxScoreB: evalB.summary.maxScore,
     passedA: evalA.summary.passed,
     passedB: evalB.summary.passed,
-    strengthsA: findStrengths(evalA, evalB),
-    strengthsB: findStrengths(evalB, evalA),
+    strengthsA: findStrengths(evalA, evalB, samePathway),
+    strengthsB: findStrengths(evalB, evalA, samePathway),
     warningsA: evalA.summary.warnings,
     warningsB: evalB.summary.warnings,
   };
