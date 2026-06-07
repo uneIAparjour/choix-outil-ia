@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { RotateCcw } from "lucide-react";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { decisionTreeData } from "@/data/decisionTreeData";
 import {
   Pathway,
@@ -49,14 +48,9 @@ const DecisionTree: React.FC = () => {
   const resolveNextStep = (step: Step, choice: Choice): string => {
     const next = choice.nextStep;
 
-    // RGPD non conforme : adapter selon le parcours déjà choisi
-    if (next === "3.1") {
-      if (pathway === "students") {
-        // Éliminatoire pour usage élèves — rejet direct
-        return "reject";
-      }
-      // Personnel ou professionnel — on continue avec avertissement, skip 3.1
-      return "3.3";
+    // RGPD non conforme + élèves : éliminatoire direct
+    if (next === "3.1" && pathway === "students") {
+      return "reject";
     }
 
     // Parcours personnel : fin après les biais (pas de valeurs pro)
@@ -96,7 +90,7 @@ const DecisionTree: React.FC = () => {
       });
     }
 
-      const nextStep = resolveNextStep(step, choice);
+    const nextStep = resolveNextStep(step, choice);
 
     if (nextStep === "export") {
       const passed = currentPath.includes("success");
@@ -227,38 +221,36 @@ const DecisionTree: React.FC = () => {
         <>
           <ToolInfoForm toolInfo={toolInfo} onChange={setToolInfo} />
 
-          <TooltipProvider>
-            <div className="space-y-6">
-              {currentPath.map((stepId, index) => {
-                const step = getStep(stepId);
-                if (!step) return null;
+          <div className="space-y-6">
+            {currentPath.map((stepId, index) => {
+              const step = getStep(stepId);
+              if (!step) return null;
 
-                const isLast = index === currentPath.length - 1;
-                const isExpanded = expandedSteps.has(stepId);
-                const selectedChoice = choiceByStep[stepId];
-                const outcomeLevel = selectedChoice?.complianceLevel;
+              const isLast = index === currentPath.length - 1;
+              const isExpanded = expandedSteps.has(stepId);
+              const selectedChoice = choiceByStep[stepId];
+              const outcomeLevel = selectedChoice?.complianceLevel;
 
-                return (
-                  <StepCard
-                    key={`${stepId}-${index}`}
-                    step={step}
-                    isExpanded={isExpanded}
-                    isLastStep={isLast}
-                    isConclusion={isConclusion(stepId)}
-                    outcomeLevel={outcomeLevel}
-                    onChoice={(choice) => handleChoice(step, choice)}
-                    onJumpBack={() => jumpToStep(index)}
-                  />
-                );
-              })}
-            </div>
-          </TooltipProvider>
+              return (
+                <StepCard
+                  key={`${stepId}-${index}`}
+                  step={step}
+                  isExpanded={isExpanded}
+                  isLastStep={isLast}
+                  isConclusion={isConclusion(stepId)}
+                  outcomeLevel={outcomeLevel}
+                  onChoice={(choice) => handleChoice(step, choice)}
+                  onJumpBack={() => jumpToStep(index)}
+                />
+              );
+            })}
+          </div>
 
           {evaluation && <ResultSummary evaluation={evaluation} />}
         </>
       )}
 
-            <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
+      <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
         <p className="mb-2 text-sm text-[#6B7280]">
           Version 2 — augmentée et inspirée en partie par le modèle d'évaluation de{" "}
           <a
