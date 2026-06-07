@@ -2,12 +2,12 @@ import { Step } from "@/types/evaluation";
 
 export const decisionTreeData: Step[] = [
   // ═══════════════════════════════════════════
-  // ÉTAPE 0 : CHOIX DU PARCOURS
+  // CHOIX DU PARCOURS
   // ═══════════════════════════════════════════
   {
     id: "0",
     dimension: "compliance",
-    question: "Dans quel cadre souhaitez-vous utiliser cet outil d'IA générative ?",
+    question: "Dans quel cadre souhaitez-vous utiliser cet outil ?",
     choices: [
       { text: "Usage personnel (curiosité, veille, productivité personnelle)", nextStep: "1", complianceLevel: "compliant" },
       { text: "Usage professionnel enseignant (préparation de cours, correction, génération de supports)", nextStep: "1", complianceLevel: "compliant" },
@@ -18,7 +18,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "1",
     dimension: "compliance",
-    question: "J'ai cherché et trouvé une application d'IA générative qui pourrait m'accompagner dans la réalisation d'une ou plusieurs tâches.",
+    question: "J'ai cherché et trouvé une application d'IA générative qui pourrait m'accompagner.",
     choices: [
       { text: "Je commence l'analyse de l'application", nextStep: "2", complianceLevel: "compliant" }
     ],
@@ -31,7 +31,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "2",
     dimension: "compliance",
-    question: "Est-ce que je peux accéder à l'application gratuitement pour la tester (application gratuite, freemium ou avec période de test gratuit) ?",
+    question: "Est-ce que je peux accéder à l'application gratuitement pour la tester ?",
     choices: [
       { text: "Oui", nextStep: "3", complianceLevel: "compliant" },
       { text: "Non", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
@@ -41,10 +41,10 @@ export const decisionTreeData: Step[] = [
   {
     id: "3",
     dimension: "compliance",
-    question: "L'application respecte-t-elle les critères du RGPD (Règlement Général sur la Protection des Données) ?",
+    question: "L'application vous semble-t-elle respecter les critères du RGPD ? (À confirmer si utilisation régulière par la ou le Délégué à la Protection des Données)",
     choices: [
       { text: "Oui", nextStep: "3.3", complianceLevel: "compliant" },
-      { text: "Partiellement ou avec des réserves", nextStep: "3.1", complianceLevel: "partial", warning: "Conformité RGPD partielle — vigilance requise" },
+      { text: "Partiellement ou avec des réserves", nextStep: "3.3", complianceLevel: "partial", warning: "Conformité RGPD partielle — vigilance requise" },
       { text: "Non", nextStep: "3.1", complianceLevel: "non-compliant" },
       { text: "Je ne sais pas", nextStep: "3.2" }
     ],
@@ -66,7 +66,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "3.2",
     dimension: "compliance",
-    question: "Consultez les 6 critères principaux du RGPD à l'aide de l'infobulle, puis réévaluez.",
+    question: "Consultez les 6 critères du RGPD (infobulle), puis réévaluez.",
     choices: [
       { text: "J'ai consulté les critères et je peux maintenant évaluer", nextStep: "3" },
       { text: "Je ne sais toujours pas", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
@@ -79,7 +79,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "3.3",
     dimension: "compliance",
-    question: "Les données sont-elles hébergées dans l'Union Européenne ? Sont-elles soumises à des législations extraterritoriales (Cloud Act, FISA) ?",
+    question: "Les données sont-elles hébergées dans l'Union Européenne ? Sont-elles soumises à des législations extraterritoriales (Cloud Act, FISA) ? (À confirmer si utilisation régulière par la ou le Délégué à la Protection des Données)",
     choices: [
       { text: "Oui, hébergement UE sans législation extraterritoriale", nextStep: "4", complianceLevel: "compliant" },
       { text: "Hébergement UE mais éditeur soumis au Cloud Act", nextStep: "4", complianceLevel: "partial", warning: "Données potentiellement accessibles via Cloud Act" },
@@ -90,10 +90,10 @@ export const decisionTreeData: Step[] = [
     infoSources: ["https://www.cnil.fr/fr/la-cnil-publie-une-faq-sur-les-transferts-de-donnees-vers-les-etats-unis"],
     pathways: ["personal", "professional", "students"]
   },
-    {
+  {
     id: "4",
     dimension: "compliance",
-    question: "L'application respecte-t-elle les obligations de transparence du règlement européen sur l'IA (AI Act) ?",
+    question: "L'application vous semble-t-elle respecter les obligations de transparence du règlement européen sur l'IA (AI Act) ? (À confirmer si utilisation régulière par la ou le Délégué à la Protection des Données)",
     choices: [
       { text: "Oui : l'outil informe clairement qu'il utilise l'IA et documente son fonctionnement", nextStep: "4.1", complianceLevel: "compliant" },
       { text: "Partiellement : certaines informations sont disponibles mais incomplètes", nextStep: "4.1", complianceLevel: "partial", warning: "Conformité AI Act partielle — transparence incomplète" },
@@ -106,7 +106,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "4.1",
     dimension: "compliance",
-    question: "L'application est-elle accessible aux personnes en situation de handicap ? (conformité RGAA/WCAG, compatibilité lecteurs d'écran, alternatives textuelles)",
+    question: "L'application est-elle accessible aux personnes en situation de handicap ? (RGAA/WCAG, lecteurs d'écran, alternatives textuelles)",
     choices: [
       { text: "Oui", nextStep: "5", complianceLevel: "compliant" },
       { text: "Partiellement", nextStep: "5", complianceLevel: "partial", warning: "Accessibilité handicap partielle" },
@@ -183,7 +183,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "7.1",
     dimension: "usability",
-    question: "Consultez la documentation ou la FAQ de l'application et/ou contactez le support pour obtenir des informations sur son fonctionnement et ses limitations.",
+    question: "Consultez la documentation ou la FAQ de l'application et/ou contactez le support.",
     choices: [
       { text: "J'ai trouvé des informations claires", nextStep: "8", complianceLevel: "compliant" },
       { text: "Les réponses ne sont pas claires", nextStep: "8", complianceLevel: "partial", warning: "Transparence insuffisante sur le fonctionnement" },
@@ -210,19 +210,20 @@ export const decisionTreeData: Step[] = [
   {
     id: "9",
     dimension: "acceptability",
-    question: "L'application a-t-elle été conçue pour minimiser son impact environnemental ? (rapports, certifications, matériels et serveurs, taille du modèle…)",
+    question: "L'application a-t-elle été conçue pour minimiser son impact environnemental ?",
     choices: [
       { text: "Oui", nextStep: "10", complianceLevel: "compliant" },
       { text: "Partiellement ou pas d'information claire", nextStep: "10", complianceLevel: "partial", warning: "Impact environnemental non vérifié ou partiellement maîtrisé" },
       { text: "Non, impact environnemental significatif", nextStep: "10", complianceLevel: "non-compliant", warning: "Impact environnemental significatif" }
     ],
-    infoTooltip: "L'entraînement et l'utilisation des modèles d'IA consomment des ressources importantes (énergie, eau, matériel). Certains éditeurs publient des rapports environnementaux et utilisent des centres de données alimentés en énergie renouvelable.",
+    infoTooltip: "L'entraînement et l'utilisation des modèles d'IA consomment des ressources importantes (énergie, eau, matériel). Pour évaluer l'impact environnemental :\n- Consultez le rapport RSE ou environnemental de l'éditeur\n- Vérifiez si l'éditeur publie l'empreinte carbone de son modèle\n- Regardez si les serveurs utilisent des énergies renouvelables\n- Comparez la taille du modèle : un modèle plus petit consomme généralement moins\n- Cherchez des certifications environnementales (ISO 14001, etc.)\n- Consultez des comparatifs comme le ML CO2 Impact Calculator",
+    infoSources: ["https://mlco2.github.io/impact/"],
     pathways: ["personal", "professional", "students"]
   },
   {
     id: "10",
     dimension: "acceptability",
-    question: "L'application utilise-t-elle ou a-t-elle utilisé des employés ou sous-traitants peu payés voire exploités pour l'entraînement ou le fonctionnement de l'IA ?",
+    question: "L'entreprise qui fournit les modèles d'IA utilise-t-elle ou a-t-elle utilisé des employés ou sous-traitants peu payés voire exploités pour l'entraînement ou le fonctionnement de l'IA ?",
     choices: [
       { text: "Non", nextStep: "10.1", complianceLevel: "compliant" },
       { text: "Je ne sais pas", nextStep: "10.0", complianceLevel: "partial" },
@@ -233,7 +234,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "10.0",
     dimension: "acceptability",
-    question: "Recherchez des informations sur les pratiques éthiques de l'entreprise, consultez l'annuaire de fairlabor.org ou des articles de presse.",
+    question: "Recherchez des informations sur les pratiques éthiques de l'entreprise : annuaire fairlabor.org, articles de presse, rapports.",
     choices: [
       { text: "J'ai vérifié, pas de problème identifié", nextStep: "10.1", complianceLevel: "compliant" },
       { text: "J'ai vérifié, des problèmes existent", nextStep: "10.1", complianceLevel: "non-compliant", warning: "Pratiques éthiques douteuses concernant les conditions de travail" },
@@ -246,18 +247,19 @@ export const decisionTreeData: Step[] = [
   {
     id: "10.1",
     dimension: "acceptability",
-    question: "L'éditeur communique-t-il sur les biais connus de son modèle et les mesures prises pour les atténuer ?",
+    question: "L'éditeur communique-t-il sur les biais connus du modèle utilisé et les mesures d'atténuation ?",
     choices: [
       { text: "Oui, documentation transparente sur les biais", nextStep: "11", complianceLevel: "compliant" },
       { text: "Partiellement", nextStep: "11", complianceLevel: "partial", warning: "Communication partielle sur les biais algorithmiques" },
       { text: "Non", nextStep: "11", complianceLevel: "non-compliant", warning: "Aucune information sur les biais algorithmiques" }
     ],
-    infoTooltip: "Les modèles d'IA peuvent reproduire ou amplifier des biais présents dans leurs données d'entraînement (genre, origine, culture…). En contexte éducatif, des biais non identifiés peuvent transmettre des stéréotypes aux élèves.",
+    infoTooltip: "Les modèles d'IA peuvent reproduire ou amplifier des biais présents dans leurs données d'entraînement (genre, origine, culture…). Pour vérifier :\n- Consultez la « model card » ou fiche technique du modèle (souvent publiée sur le site de l'éditeur ou sur Hugging Face)\n- Cherchez les rapports d'audit ou d'évaluation du modèle\n- Vérifiez si l'éditeur documente les limites et biais connus\n- Regardez si des tests d'équité (fairness benchmarks) ont été réalisés\n- Consultez les publications académiques ou articles de presse sur le modèle",
+    infoSources: ["https://huggingface.co/docs/hub/model-cards"],
     pathways: ["personal", "professional", "students"]
   },
 
   // ═══════════════════════════════════════════
-  // VALEURS (professionnel + élèves uniquement)
+  // VALEURS (professionnel + élèves)
   // ═══════════════════════════════════════════
   {
     id: "11",
@@ -273,7 +275,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "12",
     dimension: "acceptability",
-    question: "Dans le cadre d'une utilisation commune ou collaborative, l'application est-elle conforme aux valeurs des autres utilisateurs ?",
+    question: "Dans le cadre d'une utilisation collaborative, l'application est-elle conforme aux valeurs des autres utilisateurs ?",
     choices: [
       { text: "Oui", nextStep: "13", complianceLevel: "compliant" },
       { text: "Non", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true },
@@ -288,7 +290,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "13",
     dimension: "acceptability",
-    question: "Je souhaite utiliser cet outil dans un cadre pédagogique avec des élèves à partir de la 4ème, comme indiqué dans le cadre d'usage de l'IA en éducation ?",
+    question: "Je souhaite utiliser cet outil avec des élèves à partir de la 4ème, comme indiqué dans le cadre d'usage de l'IA en éducation ?",
     choices: [
       { text: "Oui, avec des élèves à partir de la 4ème", nextStep: "14", complianceLevel: "compliant" },
       { text: "Les élèves ne sont pas encore en 4ème", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Usage d'IA générative interdit avant la 4ème" }
@@ -334,7 +336,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "15",
     dimension: "acceptability",
-    question: "L'application a-t-elle été testée et validée par des enseignants ou des experts en pédagogie ? (Ministère, inspection, recherche, Réseau Canopé…)",
+    question: "L'application a-t-elle été testée et validée par des enseignants ou experts en pédagogie ? (Ministère, inspection, recherche, Réseau Canopé…)",
     choices: [
       { text: "Oui", nextStep: "success", complianceLevel: "compliant" },
       { text: "Non", nextStep: "15.1" },
@@ -357,7 +359,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "15.2",
     dimension: "acceptability",
-    question: "Recherchez des études de cas ou des témoignages d'enseignants ayant utilisé l'application.",
+    question: "Recherchez des études de cas ou témoignages d'enseignants ayant utilisé l'application.",
     choices: [
       { text: "J'ai trouvé des retours, je peux maintenant évaluer", nextStep: "15" }
     ],
@@ -371,7 +373,7 @@ export const decisionTreeData: Step[] = [
   {
     id: "success",
     dimension: "acceptability",
-    question: "Bravo ! Vous avez trouvé un outil qui répond à vos critères. Consultez le résumé de votre évaluation ci-dessous. Si l'utilisation de cette application peut devenir régulière dans le cadre de votre travail, pensez à la faire inscrire au registre RGPD et à informer le DPD de votre établissement.",
+    question: "Vous avez trouvé un outil qui répond à vos critères. Consultez le résumé de votre évaluation ci-dessous. Pensez à le faire inscrire au registre RGPD et à informer le DPD si vous souhaitez en faire un usage régulier.",
     choices: [
       { text: "Exporter l'évaluation (JSON)", nextStep: "export", complianceLevel: "compliant" },
       { text: "Recommencer avec un autre outil", nextStep: "0", complianceLevel: "compliant" }
