@@ -46,14 +46,30 @@ const DecisionTree: React.FC = () => {
     }, 100);
   };
 
-  const resolveNextStep = (stepId: string, choiceNextStep: string): string => {
-    if (pathway === "personal" && choiceNextStep === "11") {
+  const resolveNextStep = (step: Step, choice: Choice): string => {
+    const next = choice.nextStep;
+
+    // RGPD non conforme : adapter selon le parcours déjà choisi
+    if (next === "3.1") {
+      if (pathway === "students") {
+        // Éliminatoire pour usage élèves — rejet direct
+        return "reject";
+      }
+      // Personnel ou professionnel — on continue avec avertissement, skip 3.1
+      return "3.3";
+    }
+
+    // Parcours personnel : fin après les biais (pas de valeurs pro)
+    if (pathway === "personal" && next === "11") {
       return "success";
     }
-    if (pathway === "professional" && choiceNextStep === "13") {
+
+    // Parcours professionnel : fin après valeurs collaboratives (pas de branche pédagogique)
+    if (pathway === "professional" && next === "13") {
       return "success";
     }
-    return choiceNextStep;
+
+    return next;
   };
 
   const startPathway = (selected: Pathway) => {
@@ -80,7 +96,7 @@ const DecisionTree: React.FC = () => {
       });
     }
 
-    const nextStep = resolveNextStep(step.id, choice.nextStep);
+      const nextStep = resolveNextStep(step, choice);
 
     if (nextStep === "export") {
       const passed = currentPath.includes("success");
