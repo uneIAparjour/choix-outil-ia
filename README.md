@@ -68,25 +68,26 @@ L'arbre de décision complet est documenté dans [`docs/arbre-decision.md`](docs
 
 ## Architecture
 
+```
 src/
-├── types/evaluation.ts # Types TypeScript (Pathway, Step, Choice, EvaluationExport…)
-├── data/decisionTreeData.ts # Données de l'arbre de décision (questions, réponses, infobulles)
+├── types/evaluation.ts          # Types TypeScript (Pathway, Step, Choice, EvaluationExport…)
+├── data/decisionTreeData.ts     # Données de l'arbre de décision (questions, réponses, infobulles)
 ├── lib/
-│ ├── scoring.ts # Scoring par dimension, export/import JSON
-│ └── comparison.ts # Comparaison de deux évaluations
+│   ├── scoring.ts               # Scoring par dimension, export/import JSON
+│   └── comparison.ts            # Comparaison de deux évaluations
 ├── components/
-│ ├── DecisionTree.tsx # Composant principal (routing, état, navigation)
-│ ├── PathwaySelector.tsx # Sélection du parcours (3 cartes)
-│ ├── ToolInfoForm.tsx # Formulaire nom/URL/éditeur
-│ ├── StepCard.tsx # Carte question avec boutons et infobulles
-│ ├── ResultSummary.tsx # Résumé des scores avec barres de progression
-│ └── ComparisonView.tsx # Vue comparaison de deux JSON
+│   ├── DecisionTree.tsx          # Composant principal (routing, état, navigation)
+│   ├── PathwaySelector.tsx       # Sélection du parcours (3 cartes)
+│   ├── ToolInfoForm.tsx          # Formulaire nom/URL/éditeur
+│   ├── StepCard.tsx              # Carte question avec boutons et infobulles
+│   ├── ResultSummary.tsx         # Résumé des scores avec barres de progression
+│   └── ComparisonView.tsx        # Vue comparaison de deux JSON
 ├── pages/
-│ ├── Index.tsx # Page principale
-│ └── Compare.tsx # Page /comparer
-├── App.tsx # Routes
-└── main.tsx # Point d'entrée
-
+│   ├── Index.tsx                 # Page principale
+│   └── Compare.tsx               # Page /comparer
+├── App.tsx                       # Routes
+└── main.tsx                      # Point d'entrée
+```
 
 ## Stack technique
 
@@ -102,14 +103,17 @@ src/
 ```bash
 npm install
 npm run dev
+```
 
-L'application tourne sur http://localhost:8080.
+L'application tourne sur `http://localhost:8080`.
 
 ## Intégration WordPress
-L'application est intégrée dans la page WordPress via une iframe. Voir le README pour les détails d'intégration lors du déploiement GitHub Pages (à venir).
+
+L'application est intégrée dans la page WordPress via une iframe. Déploiement GitHub Pages à venir.
 
 ## Licence
-Mis à disposition sous licence CC BY 4.0 par uneIAparjour.
 
-Version 1 disponible sur la branche main
-Code source v2 sur la branche v2
+Mis à disposition sous [licence CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.fr) par [uneIAparjour](https://www.uneiaparjour.fr).
+
+- [Version 1](https://github.com/uneIAparjour/choix-outil-ia/tree/main) disponible sur la branche `main`
+- [Code source v2](https://github.com/uneIAparjour/choix-outil-ia/tree/v2) sur la branche `v2`
