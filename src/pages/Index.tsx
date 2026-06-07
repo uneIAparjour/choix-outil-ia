@@ -5,7 +5,7 @@ import { ArrowLeftRight } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <DecisionTree />
       <div className="flex justify-center py-6">
         <Link
