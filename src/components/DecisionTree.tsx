@@ -242,9 +242,9 @@ const DecisionTree: React.FC = () => {
         </>
       )}
 
-      <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
+            <footer className="mt-16 py-6 border-t border-[#E5E7EB] text-center">
         <p className="mb-2 text-sm text-[#6B7280]">
-          Version 2 — Inspiré en partie par le modèle d'évaluation de{" "}
+          Version 2 — augmentée et inspirée en partie par le modèle d'évaluation de{" "}
           <a
             href="https://edutice.hal.science/edutice-00000154"
             target="_blank"
@@ -257,14 +257,14 @@ const DecisionTree: React.FC = () => {
         </p>
         <p className="mb-2 text-sm text-[#6B7280]">
           <a
-            href="https://www.uneiaparjour.fr/aide-au-choix-doutils/"
+            href="https://github.com/uneIAparjour/choix-outil-ia/tree/main"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#005E6E] hover:underline"
           >
             Version 1
           </a>
-          {" "}disponible sur uneIAparjour.fr.
+          {" "}disponible sur GitHub.
         </p>
         <p className="mb-2 text-sm text-[#6B7280]">
           Réalisé par{" "}
