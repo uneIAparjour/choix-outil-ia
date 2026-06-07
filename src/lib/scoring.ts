@@ -52,7 +52,7 @@ export function buildCriterionResponse(
 ): CriterionResponse | null {
   if (!choice.complianceLevel) return null;
   if (step.isAction) return null;
-  if (["0", "success", "reject", "reconsider", "final-reject"].includes(step.id))
+  if (["0", "1", "success", "reject", "reconsider", "final-reject"].includes(step.id))
     return null;
 
   return {
