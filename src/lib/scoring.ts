@@ -181,10 +181,11 @@ export function downloadJSON(evaluation: EvaluationExport): void {
   const a = document.createElement("a");
   a.href = url;
   a.download = filename;
+  a.target = "_blank";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export function loadJSON(file: File): Promise<EvaluationExport> {
