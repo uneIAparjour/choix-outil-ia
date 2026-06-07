@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import DecisionTree from "@/components/DecisionTree";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { ArrowLeftRight } from "lucide-react";
 
 const Index = () => {
@@ -16,9 +15,7 @@ const Index = () => {
           Comparer deux outils
         </Link>
       </div>
-      <TooltipProvider>
-        <DecisionTree />
-      </TooltipProvider>
+      <DecisionTree />
     </div>
   );
 };
