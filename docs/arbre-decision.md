@@ -53,13 +53,16 @@
 ### [3.1] Non-conformité RGPD — Choix selon le parcours
 > L'application n'est pas (pleinement) conforme au RGPD.
 
+> ⚠️ **Parcours Élèves** : cette étape n'est pas affichée — un outil non conforme RGPD est automatiquement rejeté pour un usage avec des élèves.
+
 | Réponse | Niveau | Suite |
 |---------|--------|-------|
 | Mon usage est personnel, sans données sensibles — je continue avec vigilance | ⚠️ Partiel | → [3.3] |
-| Mon usage est professionnel (préparation) avec un compte dédié et attention aux données personnelles | ⚠️ Partiel | → [3.3] |
+| Mon usage est professionnel en phase d'expérimentation — je teste avec précautions, sans données personnelles | ⚠️ Partiel | → [3.3] |
+| Mon usage professionnel est régulier ou le deviendra | ❌ Éliminatoire | → Rejet |
 | Je souhaite l'utiliser avec des élèves | ❌ Éliminatoire | → Rejet |
 
-**Parcours :** Personnel · Professionnel · Élèves
+**Parcours :** Personnel · Professionnel
 
 ---
 
