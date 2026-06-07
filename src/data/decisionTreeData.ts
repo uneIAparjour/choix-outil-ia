@@ -58,7 +58,8 @@ export const decisionTreeData: Step[] = [
     question: "L'application n'est pas (pleinement) conforme au RGPD.",
     choices: [
       { text: "Mon usage est personnel, sans données sensibles — je continue avec vigilance", nextStep: "3.3", complianceLevel: "partial", warning: "Non conforme RGPD — usage personnel uniquement, aucune donnée élève" },
-      { text: "Mon usage est professionnel (préparation) avec un compte dédié et attention aux données personnelles", nextStep: "3.3", complianceLevel: "partial", warning: "Non conforme RGPD — usage professionnel restreint, aucune donnée élève" },
+      { text: "Mon usage est professionnel en phase d'expérimentation — je teste avec précautions, sans données personnelles", nextStep: "3.3", complianceLevel: "partial", warning: "Non conforme RGPD — expérimentation uniquement, conformité requise avant usage régulier" },
+      { text: "Mon usage professionnel est régulier ou le deviendra", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Non conforme RGPD — conformité obligatoire pour un usage professionnel régulier" },
       { text: "Je souhaite l'utiliser avec des élèves", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Non conforme RGPD — interdit avec des élèves" }
     ],
     pathways: ["personal", "professional", "students"]
