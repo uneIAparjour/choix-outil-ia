@@ -116,11 +116,7 @@ const StepCard: React.FC<StepCardProps> = ({
                   sideOffset={5}
                   align="center"
                 >
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: step.infoTooltip.replace(/\n/g, "<br>"),
-                    }}
-                  />
+                  <p className="whitespace-pre-line">{step.infoTooltip}</p>
                   {step.infoSources && step.infoSources.length > 0 && (
                     <div className="mt-3 pt-2 border-t border-gray-100">
                       <p className="text-xs text-gray-500 font-medium mb-1">Sources :</p>
