@@ -203,7 +203,7 @@ const DecisionTree: React.FC = () => {
         <h1 className="text-3xl sm:text-4xl font-bold text-[#005E6E] leading-tight mb-4">
           Aide au choix d'une application
           <br />
-          utilisant l'IA générative
+          utilisant des IA génératives
         </h1>
         <div className="w-20 h-1 bg-[#005E6E] rounded-full mb-4" />
         <p className="text-sm text-gray-500 mb-6 max-w-lg">
