@@ -16,14 +16,7 @@ function sendHeight() {
   window.parent.postMessage({ type: 'iframeResize', height }, '*');
 }
 
-function sendScrollTo(offset = 0) {
-  window.parent.postMessage({ type: 'iframeScrollTo', offset }, '*');
-}
-
-const observer = new MutationObserver(() => {
-  sendHeight();
-  sendScrollTo(0);
-});
+const observer = new MutationObserver(sendHeight);
 observer.observe(document.getElementById('root')!, { childList: true, subtree: true, attributes: true });
 window.addEventListener('resize', sendHeight);
 window.addEventListener('load', sendHeight);
