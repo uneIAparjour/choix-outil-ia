@@ -9,10 +9,17 @@ function sendHeight() {
   const root = document.getElementById('root');
   if (!root) return;
   const height = root.offsetHeight;
-  window.parent.postMessage({ type: 'resize', height }, '*');
+  window.parent.postMessage({ type: 'iframeResize', height }, '*');
 }
 
-const observer = new MutationObserver(sendHeight);
+function sendScrollTo(offset = 0) {
+  window.parent.postMessage({ type: 'iframeScrollTo', offset }, '*');
+}
+
+const observer = new MutationObserver(() => {
+  sendHeight();
+  sendScrollTo(0);
+});
 observer.observe(document.getElementById('root')!, { childList: true, subtree: true, attributes: true });
 window.addEventListener('resize', sendHeight);
 window.addEventListener('load', sendHeight);
