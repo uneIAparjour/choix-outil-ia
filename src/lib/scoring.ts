@@ -77,7 +77,7 @@ export function buildCriterionResponse(
 ): CriterionResponse | null {
   if (!choice.complianceLevel) return null;
   if (step.isAction) return null;
-  if (["0", "1", "success", "reject", "reconsider", "final-reject"].includes(step.id))
+  if (["0", "0.1", "0.2", "1", "3.test-en", "3.eleves-test", "3.registre.info", "success", "reject", "reconsider", "final-reject"].includes(step.id))
     return null;
 
   return {
