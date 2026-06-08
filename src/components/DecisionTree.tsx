@@ -195,7 +195,7 @@ const DecisionTree: React.FC = () => {
     ["success", "reject", "final-reject"].includes(stepId);
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 min-h-screen bg-white font-marianne" ref={treeRef}>
+        <div className="max-w-4xl mx-auto py-12 px-4 bg-white font-marianne" ref={treeRef}>
       <div className="flex flex-col items-center justify-center mb-12 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#005E6E] leading-tight mb-4">
           Aide au choix d'une application
