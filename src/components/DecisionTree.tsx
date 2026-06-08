@@ -41,7 +41,10 @@ const DecisionTree: React.FC = () => {
   const scrollToStep = (stepId: string) => {
     setTimeout(() => {
       const el = document.getElementById(`step-${stepId}`);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (el) {
+        const offset = el.getBoundingClientRect().top;
+        window.parent.postMessage({ type: 'iframeScrollTo', offset }, '*');
+      }
     }, 100);
   };
 
