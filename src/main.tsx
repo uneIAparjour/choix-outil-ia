@@ -8,7 +8,11 @@ createRoot(document.getElementById("root")!).render(<App />);
 function sendHeight() {
   const root = document.getElementById('root');
   if (!root) return;
-  const height = root.offsetHeight;
+  const height = Math.max(
+    root.offsetHeight,
+    root.scrollHeight,
+    document.body.scrollHeight
+  );
   window.parent.postMessage({ type: 'iframeResize', height }, '*');
 }
 
@@ -24,3 +28,4 @@ observer.observe(document.getElementById('root')!, { childList: true, subtree: t
 window.addEventListener('resize', sendHeight);
 window.addEventListener('load', sendHeight);
 setTimeout(sendHeight, 500);
+setTimeout(sendHeight, 1500);
