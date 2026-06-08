@@ -15,6 +15,36 @@ export const decisionTreeData: Step[] = [
     ],
     pathways: ["personal", "professional", "students"]
   },
+  // ═══════════════════════════════════════════
+  // SOUS-PARCOURS PROFESSIONNEL : CONTEXTE
+  // ═══════════════════════════════════════════
+  {
+    id: "0.1",
+    dimension: "compliance",
+    question: "Dans quel cadre professionnel souhaitez-vous utiliser cet outil ?",
+    choices: [
+      { text: "Enseignant(e) — préparation de cours, évaluations, corrections", nextStep: "0.2", complianceLevel: "compliant" },
+      { text: "Personnel Éducation nationale — tâches administratives (rédaction, synthèse, traduction…)", nextStep: "0.2", complianceLevel: "compliant" },
+      { text: "Autre contexte professionnel (hors Éducation nationale)", nextStep: "0.2", complianceLevel: "compliant" }
+    ],
+    pathways: ["professional"]
+  },
+
+  // ═══════════════════════════════════════════
+  // SOUS-PARCOURS : TEST OU USAGE RÉGULIER
+  // ═══════════════════════════════════════════
+  {
+    id: "0.2",
+    dimension: "compliance",
+    question: "Quel type d'usage envisagez-vous ?",
+    choices: [
+      { text: "Je teste ou j'explore l'outil avant de décider", nextStep: "1", complianceLevel: "compliant" },
+      { text: "Usage régulier ou qui va le devenir", nextStep: "1", complianceLevel: "compliant" }
+    ],
+    infoTooltip: "L'exploration permet de découvrir un outil avant de s'engager. Un usage régulier implique des obligations supplémentaires, notamment l'inscription au registre des traitements par le responsable de traitement.",
+    pathways: ["professional", "students"]
+  },
+
   {
     id: "1",
     dimension: "compliance",
@@ -44,373 +74,4 @@ export const decisionTreeData: Step[] = [
     question: "L'application vous semble-t-elle respecter les critères du RGPD ? (À confirmer si utilisation régulière par la ou le Délégué à la Protection des Données)",
     choices: [
       { text: "Oui", nextStep: "3.3", complianceLevel: "compliant" },
-      { text: "Partiellement ou avec des réserves", nextStep: "3.3", complianceLevel: "partial", warning: "Conformité RGPD partielle — vigilance requise" },
-      { text: "Non", nextStep: "3.1", complianceLevel: "non-compliant" },
-      { text: "Je ne sais pas", nextStep: "3.2" }
-    ],
-    infoTooltip: "Les 6 critères principaux RGPD :\n- Collecte des données seulement nécessaires\n- Transparence sur la collecte et l'utilisation des données\n- Facilité pour exercer son droit de consultation, rectification, suppression des données\n- Durée de conservation des données\n- Sécurisation des données\n- Démarche continue de vérification de la conformité RGPD",
-    infoSources: ["https://www.cnil.fr/fr/rgpd-de-quoi-parle-t-on"],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "3.1",
-    dimension: "compliance",
-    question: "L'application n'est pas (pleinement) conforme au RGPD.",
-    choices: [
-      { text: "Mon usage est personnel, sans données sensibles — je continue avec vigilance", nextStep: "3.3", complianceLevel: "partial", warning: "Non conforme RGPD — usage personnel uniquement, aucune donnée élève" },
-      { text: "Mon usage est professionnel en phase d'expérimentation — je teste avec précautions, sans données personnelles", nextStep: "3.3", complianceLevel: "partial", warning: "Non conforme RGPD — expérimentation uniquement, conformité requise avant usage régulier" },
-      { text: "Mon usage professionnel est régulier ou le deviendra", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Non conforme RGPD — conformité obligatoire pour un usage professionnel régulier" },
-      { text: "Je souhaite l'utiliser avec des élèves", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Non conforme RGPD — interdit avec des élèves" }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "3.2",
-    dimension: "compliance",
-    question: "Consultez les 6 critères du RGPD (infobulle), puis réévaluez.",
-    choices: [
-      { text: "J'ai consulté les critères et je peux maintenant évaluer", nextStep: "3" },
-      { text: "Je ne sais toujours pas", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
-    ],
-    infoTooltip: "Les 6 critères principaux RGPD :\n- Collecte des données seulement nécessaires\n- Transparence sur la collecte et l'utilisation des données\n- Facilité pour exercer son droit de consultation, rectification, suppression des données\n- Durée de conservation des données\n- Sécurisation des données\n- Démarche continue de vérification de la conformité RGPD",
-    infoSources: ["https://www.cnil.fr/fr/rgpd-de-quoi-parle-t-on"],
-    isAction: true,
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "3.3",
-    dimension: "compliance",
-    question: "Les données sont-elles hébergées dans l'Union Européenne ? Sont-elles soumises à des législations extraterritoriales (Cloud Act, FISA) ? (À confirmer si utilisation régulière par la ou le Délégué à la Protection des Données)",
-    choices: [
-      { text: "Oui, hébergement UE sans législation extraterritoriale", nextStep: "4", complianceLevel: "compliant" },
-      { text: "Hébergement UE mais éditeur soumis au Cloud Act", nextStep: "4", complianceLevel: "partial", warning: "Données potentiellement accessibles via Cloud Act" },
-      { text: "Hébergement hors UE", nextStep: "4", complianceLevel: "partial", warning: "Hébergement hors UE — souveraineté des données non garantie" },
-      { text: "Je ne sais pas", nextStep: "4", complianceLevel: "partial", warning: "Souveraineté des données non vérifiée" }
-    ],
-    infoTooltip: "La souveraineté des données va au-delà du RGPD. Le Cloud Act américain permet aux autorités US d'accéder aux données hébergées par des entreprises américaines, même si les serveurs sont en Europe.",
-    infoSources: ["https://www.cnil.fr/fr/la-cnil-publie-une-faq-sur-les-transferts-de-donnees-vers-les-etats-unis"],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "4",
-    dimension: "compliance",
-    question: "L'application vous semble-t-elle respecter les obligations de transparence du règlement européen sur l'IA (AI Act) ? (À confirmer si utilisation régulière par la ou le Délégué à la Protection des Données)",
-    choices: [
-      { text: "Oui : l'outil informe clairement qu'il utilise l'IA et documente son fonctionnement", nextStep: "4.1", complianceLevel: "compliant" },
-      { text: "Partiellement : certaines informations sont disponibles mais incomplètes", nextStep: "4.1", complianceLevel: "partial", warning: "Conformité AI Act partielle — transparence incomplète" },
-      { text: "Non ou je ne sais pas", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
-    ],
-    infoTooltip: "Le règlement européen sur l'IA (AI Act) impose des obligations de transparence :\n- Informer l'utilisateur qu'il interagit avec une IA\n- Marquer les contenus générés par IA comme tels\n- Documenter le fonctionnement du système (données d'entraînement, tests, limitations)\n- Évaluer et atténuer les risques, y compris les biais",
-    infoSources: ["https://artificialintelligenceact.eu/article/50/"],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "4.1",
-    dimension: "compliance",
-    question: "L'application est-elle accessible aux personnes en situation de handicap ? (RGAA/WCAG, lecteurs d'écran, alternatives textuelles)",
-    choices: [
-      { text: "Oui", nextStep: "5", complianceLevel: "compliant" },
-      { text: "Partiellement", nextStep: "5", complianceLevel: "partial", warning: "Accessibilité handicap partielle" },
-      { text: "Non", nextStep: "5", complianceLevel: "non-compliant", warning: "Non accessible aux personnes en situation de handicap" },
-      { text: "Je ne sais pas", nextStep: "5", complianceLevel: "partial", warning: "Accessibilité handicap non vérifiée" }
-    ],
-    infoTooltip: "L'accessibilité numérique est une obligation légale pour les services publics (RGAA). Les critères WCAG définissent les standards internationaux d'accessibilité web.",
-    infoSources: ["https://accessibilite.numerique.gouv.fr/"],
-    pathways: ["personal", "professional", "students"]
-  },
-
-  // ═══════════════════════════════════════════
-  // DIMENSION 2 : UTILITÉ
-  // ═══════════════════════════════════════════
-  {
-    id: "5",
-    dimension: "utility",
-    question: "Est-ce que je pourrai, après mes tests, continuer à utiliser cet outil en fonction du modèle économique proposé (gratuité, freemium, abonnement, limitations) ?",
-    choices: [
-      { text: "Oui", nextStep: "6", complianceLevel: "compliant" },
-      { text: "Non", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "6",
-    dimension: "utility",
-    question: "L'utilisation de l'IA générative m'apporte-t-elle une réelle valeur ajoutée ? (gain de temps, idées, précision, qualité, fonctionnalités nouvelles)",
-    choices: [
-      { text: "Oui, clairement", nextStep: "6.1", complianceLevel: "compliant" },
-      { text: "Partiellement", nextStep: "6.1", complianceLevel: "partial", warning: "Valeur ajoutée limitée par rapport aux alternatives" },
-      { text: "Non", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true },
-      { text: "Je ne sais pas", nextStep: "6.0", complianceLevel: "partial" }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "6.0",
-    dimension: "utility",
-    question: "Évaluez les fonctionnalités de l'application et leur impact potentiel sur la tâche à accomplir.",
-    choices: [
-      { text: "J'ai évalué, je peux maintenant répondre", nextStep: "6" }
-    ],
-    isAction: true,
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "6.1",
-    dimension: "utility",
-    question: "L'outil produit-il des résultats fiables et vérifiables ?",
-    choices: [
-      { text: "Oui : l'outil cite ses sources et/ou propose des mécanismes de vérification", nextStep: "7", complianceLevel: "compliant" },
-      { text: "Partiellement : les résultats semblent corrects mais ne sont pas sourcés ni vérifiables automatiquement", nextStep: "7", complianceLevel: "partial", warning: "Fiabilité partielle — vérification manuelle nécessaire" },
-      { text: "Non : les résultats sont souvent erronés ou invérifiables", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Fiabilité insuffisante" }
-    ],
-    infoTooltip: "Les IA génératives peuvent produire des « hallucinations » : des informations présentées avec assurance mais factuellement fausses. C'est l'un des principaux risques en contexte éducatif. Vérifiez si l'outil cite ses sources, signale son niveau d'incertitude, ou propose des mécanismes de vérification.",
-    pathways: ["personal", "professional", "students"]
-  },
-
-  // ═══════════════════════════════════════════
-  // DIMENSION 3 : UTILISABILITÉ
-  // ═══════════════════════════════════════════
-  {
-    id: "7",
-    dimension: "usability",
-    question: "L'application fournit-elle des informations claires sur son fonctionnement et ses limitations ?",
-    choices: [
-      { text: "Oui", nextStep: "8", complianceLevel: "compliant" },
-      { text: "Non", nextStep: "7.1", complianceLevel: "non-compliant" },
-      { text: "Je ne sais pas", nextStep: "7.1" }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "7.1",
-    dimension: "usability",
-    question: "Consultez la documentation ou la FAQ de l'application et/ou contactez le support.",
-    choices: [
-      { text: "J'ai trouvé des informations claires", nextStep: "8", complianceLevel: "compliant" },
-      { text: "Les réponses ne sont pas claires", nextStep: "8", complianceLevel: "partial", warning: "Transparence insuffisante sur le fonctionnement" },
-      { text: "Je n'ai pas trouvé de réponse", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
-    ],
-    isAction: true,
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "8",
-    dimension: "usability",
-    question: "L'application est-elle facile à utiliser ? (en français si nécessaire, ergonomie, menus explicites, tutoriels…)",
-    choices: [
-      { text: "Oui", nextStep: "9", complianceLevel: "compliant" },
-      { text: "Non, mais je peux apprendre à la prendre en main", nextStep: "9", complianceLevel: "partial", warning: "Prise en main difficile — temps d'apprentissage nécessaire" },
-      { text: "Non, et je n'ai pas le temps ou les compétences", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-
-  // ═══════════════════════════════════════════
-  // DIMENSION 4 : ACCEPTABILITÉ
-  // ═══════════════════════════════════════════
-  {
-    id: "9",
-    dimension: "acceptability",
-    question: "L'application a-t-elle été conçue pour minimiser son impact environnemental ?",
-    choices: [
-      { text: "Oui", nextStep: "10", complianceLevel: "compliant" },
-      { text: "Partiellement ou pas d'information claire", nextStep: "10", complianceLevel: "partial", warning: "Impact environnemental non vérifié ou partiellement maîtrisé" },
-      { text: "Non, impact environnemental significatif", nextStep: "10", complianceLevel: "non-compliant", warning: "Impact environnemental significatif" }
-    ],
-    infoTooltip: "L'entraînement et l'utilisation des modèles d'IA consomment des ressources importantes (énergie, eau, matériel). Pour évaluer l'impact environnemental :\n- Consultez le rapport RSE ou environnemental de l'éditeur\n- Vérifiez si l'éditeur publie l'empreinte carbone de son modèle\n- Regardez si les serveurs utilisent des énergies renouvelables\n- Comparez la taille du modèle : un modèle plus petit consomme généralement moins\n- Cherchez des certifications environnementales (ISO 14001, etc.)\n- Consultez des comparatifs comme le ML CO2 Impact Calculator",
-    infoSources: ["https://mlco2.github.io/impact/"],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "10",
-    dimension: "acceptability",
-    question: "L'entreprise qui fournit les modèles d'IA utilise-t-elle ou a-t-elle utilisé des employés ou sous-traitants peu payés voire exploités pour l'entraînement ou le fonctionnement de l'IA ?",
-    choices: [
-      { text: "Non", nextStep: "10.1", complianceLevel: "compliant" },
-      { text: "Je ne sais pas", nextStep: "10.0", complianceLevel: "partial" },
-      { text: "Oui", nextStep: "10.1", complianceLevel: "non-compliant", warning: "Pratiques éthiques douteuses concernant les conditions de travail" }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "10.0",
-    dimension: "acceptability",
-    question: "Recherchez des informations sur les pratiques éthiques de l'entreprise : annuaire fairlabor.org, articles de presse, rapports.",
-    choices: [
-      { text: "J'ai vérifié, pas de problème identifié", nextStep: "10.1", complianceLevel: "compliant" },
-      { text: "J'ai vérifié, des problèmes existent", nextStep: "10.1", complianceLevel: "non-compliant", warning: "Pratiques éthiques douteuses concernant les conditions de travail" },
-      { text: "Je ne sais toujours pas", nextStep: "10.1", complianceLevel: "partial", warning: "Conditions de travail des sous-traitants non vérifiées" }
-    ],
-    infoSources: ["https://www.fairlabor.org/"],
-    isAction: true,
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "10.1",
-    dimension: "acceptability",
-    question: "L'éditeur communique-t-il sur les biais connus du modèle utilisé et les mesures d'atténuation ?",
-    choices: [
-      { text: "Oui, documentation transparente sur les biais", nextStep: "11", complianceLevel: "compliant" },
-      { text: "Partiellement", nextStep: "11", complianceLevel: "partial", warning: "Communication partielle sur les biais algorithmiques" },
-      { text: "Non", nextStep: "11", complianceLevel: "non-compliant", warning: "Aucune information sur les biais algorithmiques" }
-    ],
-    infoTooltip: "Les modèles d'IA peuvent reproduire ou amplifier des biais présents dans leurs données d'entraînement (genre, origine, culture…). Pour vérifier :\n- Consultez la « model card » ou fiche technique du modèle (souvent publiée sur le site de l'éditeur ou sur Hugging Face)\n- Cherchez les rapports d'audit ou d'évaluation du modèle\n- Vérifiez si l'éditeur documente les limites et biais connus\n- Regardez si des tests d'équité (fairness benchmarks) ont été réalisés\n- Consultez les publications académiques ou articles de presse sur le modèle",
-    infoSources: ["https://huggingface.co/docs/hub/model-cards"],
-    pathways: ["personal", "professional", "students"]
-  },
-
-  // ═══════════════════════════════════════════
-  // VALEURS (professionnel + élèves)
-  // ═══════════════════════════════════════════
-  {
-    id: "11",
-    dimension: "acceptability",
-    question: "L'application est-elle conforme à mes valeurs professionnelles ?",
-    choices: [
-      { text: "Oui", nextStep: "12", complianceLevel: "compliant" },
-      { text: "Partiellement", nextStep: "12", complianceLevel: "partial", warning: "Alignement partiel avec les valeurs professionnelles" },
-      { text: "Non", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
-    ],
-    pathways: ["professional", "students"]
-  },
-  {
-    id: "12",
-    dimension: "acceptability",
-    question: "Dans le cadre d'une utilisation collaborative, l'application est-elle conforme aux valeurs des autres utilisateurs ?",
-    choices: [
-      { text: "Oui", nextStep: "13", complianceLevel: "compliant" },
-      { text: "Non", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true },
-      { text: "Je l'utiliserai seul(e)", nextStep: "13", complianceLevel: "compliant" }
-    ],
-    pathways: ["professional", "students"]
-  },
-
-  // ═══════════════════════════════════════════
-  // BRANCHE PÉDAGOGIQUE (élèves uniquement)
-  // ═══════════════════════════════════════════
-  {
-    id: "13",
-    dimension: "acceptability",
-    question: "Je souhaite utiliser cet outil avec des élèves à partir de la 4ème, comme indiqué dans le cadre d'usage de l'IA en éducation ?",
-    choices: [
-      { text: "Oui, avec des élèves à partir de la 4ème", nextStep: "14", complianceLevel: "compliant" },
-      { text: "Les élèves ne sont pas encore en 4ème", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "Usage d'IA générative interdit avant la 4ème" }
-    ],
-    infoTooltip: "Le cadre d'usage de l'IA en éducation prévoit l'utilisation d'outils d'IA générative à partir de la 4ème.",
-    infoSources: ["https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647e"],
-    pathways: ["students"]
-  },
-  {
-    id: "14",
-    dimension: "utility",
-    question: "L'application permet-elle d'atteindre les objectifs pédagogiques définis par les programmes scolaires français ?",
-    choices: [
-      { text: "Oui", nextStep: "14.1", complianceLevel: "compliant" },
-      { text: "Partiellement", nextStep: "14.1", complianceLevel: "partial", warning: "Alignement partiel avec les programmes scolaires" },
-      { text: "Non", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true },
-      { text: "Je ne sais pas", nextStep: "14.0" }
-    ],
-    pathways: ["students"]
-  },
-  {
-    id: "14.0",
-    dimension: "utility",
-    question: "Consultez les programmes scolaires et évaluez comment l'application peut s'y intégrer.",
-    choices: [
-      { text: "J'ai consulté, je peux maintenant évaluer", nextStep: "14" }
-    ],
-    isAction: true,
-    pathways: ["students"]
-  },
-  {
-    id: "14.1",
-    dimension: "utility",
-    question: "L'élève reste-t-il en situation d'apprentissage actif avec cet outil, ou l'outil fait-il le travail à sa place ?",
-    choices: [
-      { text: "L'élève reste actif et l'outil accompagne son apprentissage", nextStep: "15", complianceLevel: "compliant" },
-      { text: "L'outil peut faire le travail à la place de l'élève mais peut être encadré", nextStep: "15", complianceLevel: "partial", warning: "Risque de délégation — encadrement pédagogique nécessaire" },
-      { text: "L'outil fait le travail à la place de l'élève", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true, warning: "L'outil remplace l'apprentissage au lieu de le soutenir" }
-    ],
-    infoTooltip: "La question fondamentale : l'IA doit être un levier d'apprentissage, pas un substitut. L'élève doit rester en posture active (réfléchir, reformuler, vérifier, critiquer) et non passive (copier-coller le résultat).",
-    pathways: ["students"]
-  },
-  {
-    id: "15",
-    dimension: "acceptability",
-    question: "L'application a-t-elle été testée et validée par des enseignants ou experts en pédagogie ? (Ministère, inspection, recherche, Réseau Canopé…)",
-    choices: [
-      { text: "Oui", nextStep: "success", complianceLevel: "compliant" },
-      { text: "Non", nextStep: "15.1" },
-      { text: "Je ne sais pas", nextStep: "15.2" }
-    ],
-    pathways: ["students"]
-  },
-  {
-    id: "15.1",
-    dimension: "acceptability",
-    question: "Effectuez des tests pour évaluer l'efficacité pédagogique.",
-    choices: [
-      { text: "J'ai testé avec des collègues, résultats concluants", nextStep: "success", complianceLevel: "compliant" },
-      { text: "J'ai testé seul(e), résultats concluants", nextStep: "success", complianceLevel: "partial", warning: "Validation par un seul enseignant — un retour collectif serait préférable" },
-      { text: "Les tests ne sont pas concluants", nextStep: "reject", complianceLevel: "non-compliant", isEliminating: true }
-    ],
-    isAction: true,
-    pathways: ["students"]
-  },
-  {
-    id: "15.2",
-    dimension: "acceptability",
-    question: "Recherchez des études de cas ou témoignages d'enseignants ayant utilisé l'application.",
-    choices: [
-      { text: "J'ai trouvé des retours, je peux maintenant évaluer", nextStep: "15" }
-    ],
-    isAction: true,
-    pathways: ["students"]
-  },
-
-  // ═══════════════════════════════════════════
-  // CONCLUSIONS
-  // ═══════════════════════════════════════════
-  {
-    id: "success",
-    dimension: "acceptability",
-    question: "Vous avez trouvé un outil qui répond à vos critères. Consultez le résumé de votre évaluation ci-dessous. Pensez à le faire inscrire au registre RGPD et à informer le DPD si vous souhaitez en faire un usage régulier.",
-    choices: [
-      { text: "Exporter l'évaluation (JSON)", nextStep: "export", complianceLevel: "compliant" },
-      { text: "Recommencer avec un autre outil", nextStep: "0", complianceLevel: "compliant" }
-    ],
-    infoTooltip: "Pensez à réévaluer cet outil dans 6 mois ou si les conditions d'utilisation changent. Le domaine de l'IA évolue très rapidement.",
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "reject",
-    dimension: "acceptability",
-    question: "Cet outil ne remplit pas tous les critères nécessaires pour votre usage.",
-    choices: [
-      { text: "Exporter l'évaluation (JSON)", nextStep: "export", complianceLevel: "compliant" },
-      { text: "Chercher un autre outil", nextStep: "0", complianceLevel: "compliant" },
-      { text: "Revoir mes critères — puis-je en assouplir un ?", nextStep: "reconsider", complianceLevel: "compliant" }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "reconsider",
-    dimension: "acceptability",
-    question: "Mes valeurs personnelles, mes valeurs professionnelles et mon cadre d'utilisation me permettent-ils de laisser de côté un critère de choix ?",
-    choices: [
-      { text: "Oui, je souhaite réévaluer avec des critères assouplis", nextStep: "0", complianceLevel: "partial", warning: "Réévaluation avec critères assouplis" },
-      { text: "Non, je maintiens mes exigences", nextStep: "final-reject", complianceLevel: "compliant" }
-    ],
-    pathways: ["personal", "professional", "students"]
-  },
-  {
-    id: "final-reject",
-    dimension: "acceptability",
-    question: "Je n'utilise pas d'outils d'IA générative pour la tâche prévue et/ou je reprends mes recherches.",
-    choices: [
-      { text: "Exporter l'évaluation (JSON)", nextStep: "export", complianceLevel: "compliant" },
-      { text: "Recommencer l'analyse", nextStep: "0", complianceLevel: "compliant" }
-    ],
-    pathways: ["personal", "professional", "students"]
-  }
-];
+      { text: "Partiellement ou avec des réserves", nextStep: "3.3", complianceLevel: "partial", warning: "Conformité RGPD partielle — vigilanc
