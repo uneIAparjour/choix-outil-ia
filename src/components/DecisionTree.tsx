@@ -51,6 +51,22 @@ const DecisionTree: React.FC = () => {
   const resolveNextStep = (step: Step, choice: Choice): string => {
     const next = choice.nextStep;
 
+    // Aiguillage conformité : remplacer l'étape 3 (auto-évaluation RGPD)
+    // par le parcours adapté au contexte
+    if (next === "3") {
+      const isEN = pathway === "students" ||
+        (pathway === "professional" && choiceByStep["0.1"] &&
+         !choiceByStep["0.1"].text.includes("Autre contexte professionnel"));
+      const isTest = choiceByStep["0.2"]?.text?.includes("teste");
+
+      if (isEN) {
+        if (isTest) {
+          return pathway === "students" ? "3.eleves-test" : "3.test-en";
+        }
+        return "3.registre";
+      }
+    }
+
     // RGPD non conforme + élèves : éliminatoire direct
     if (next === "3.1" && pathway === "students") {
       return "reject";
@@ -71,7 +87,17 @@ const DecisionTree: React.FC = () => {
 
   const startPathway = (selected: Pathway) => {
     setPathway(selected);
-    const firstStep = "1";
+    let firstStep: string;
+    switch (selected) {
+      case "professional":
+        firstStep = "0.1";
+        break;
+      case "students":
+        firstStep = "0.2";
+        break;
+      default:
+        firstStep = "1";
+    }
     setCurrentPath([firstStep]);
     setExpandedSteps(new Set([firstStep]));
     scrollToStep(firstStep);
